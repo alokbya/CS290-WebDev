@@ -81,3 +81,22 @@ A typical scenario for retrieving a document on the web will be as follows:
 
 ## Summary
 URL, HTTP, and HTML are three core technologies introduced by the World Wide Web project. Over time other technologies, particularly JavaScript and CSS have also become fundamental in building web applications.
+
+# HTTP Request
+The HTTP protocol specifies the format for a request from the client to the server for resource, and the format for a response from the server to reply to such a request from the client. 
+
+For this communication to occur, a connection needs to be created between the client and the server. The connection between the client and server is established via TCP/IP protocol.
+
+As an analogy with the telephone system, TCP/IP is the mechanism through which the telephone system establishes a phone connection between the caller and the receiver of the phone call. The HTTP protocol acts as the language between the caller and the receiver once the connection has been established.
+
+Development of web apps occurs at the level of the HTTP protocol, which in networking terminology is called an appplication level protocol. Details of the underlying TCP/IP connection are hidden by the HTTP protocol.
+
+### 3 Parts of a URL
+1. Scheme or protocol
+    This identifies the protocol used to send the request `http`
+2. Hostname
+    This is the name of the host/server machine on which the server program is running and with which the web client needs to establish a TCP/IP connection `www.example.com`
+3. Name of the resource at the server
+    The server uses this to identify the specific resource that the client has requested `index.html`
+
+Request headers are key value pairs that are sent to the server to give it more information about the request. The server can use these to decide how to respond. Accept headers tells the server about what kind of data the client can handle. 
