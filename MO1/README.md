@@ -93,10 +93,10 @@ Development of web apps occurs at the level of the HTTP protocol, which in netwo
 
 ### 3 Parts of a URL
 1. Scheme or protocol
-    This identifies the protocol used to send the request `http`
+    * This identifies the protocol used to send the request `http`
 2. Hostname
-    This is the name of the host/server machine on which the server program is running and with which the web client needs to establish a TCP/IP connection `www.example.com`
+    * This is the name of the host/server machine on which the server program is running and with which the web client needs to establish a TCP/IP connection `www.example.com`
 3. Name of the resource at the server
-    The server uses this to identify the specific resource that the client has requested `index.html`
+    * The server uses this to identify the specific resource that the client has requested `index.html`
 
 Request headers are key value pairs that are sent to the server to give it more information about the request. The server can use these to decide how to respond. Accept headers tells the server about what kind of data the client can handle. 
