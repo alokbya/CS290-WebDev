@@ -1,8 +1,8 @@
 # Module 1: Introduction to Web Development
 
 ## List the core technologies used by the web (CLO 1)
-* What is HTTP and what is its use?
-* What is a URL and what is its use?
+** What is HTTP and what is its use?
+** What is a URL and what is its use?
 * What is HTML and what is its use?
 * What is JavaScript and what is its use?
 * What is CSS and what is its use?
@@ -25,3 +25,4 @@ How do a client and a server communicate over the web?
 * What are the server name and port?
 * How does a URL specify which resource it wants from the server?
 * What is the use of query parameters?
+
