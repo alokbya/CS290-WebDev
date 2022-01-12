@@ -1,0 +1,18 @@
+GET Request
+    Request
+        Request Url: http://localhost:3000/hello?name=TestName&email=TestEmail@email.com
+        http://localhost:3000/hello?name=TestName&email=TestEmail%40email.com
+        Request Method: GET
+        Content-type: Does not exist
+    Response
+        Status Code: 200
+        Content-type: text/html; charset=utf-8
+
+POST Request
+    Request
+        Request Url: http://localhost:3000/hello
+        Request Method: POST
+        Content-type: application/x-www-form-urlencoded
+    Response
+        Status Code: 200
+        Content-type: text/html; charset=utf-8
