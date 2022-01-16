@@ -187,3 +187,73 @@ Functions in JavaScript are __"first-class"__ values, meaning we can
 * Define functions that receive other functions as arguments
 * Define functions that return functions
 
+## Anonymous function expressions using arrow function syntax
+`=>` __arrow operator__ syntax
+* The parameter variables in parentheses
+    * If there are multiple parameters, the variables are separated by commas
+    * If there is only one parameter, the parenthesis are not needed
+    If there are no parameters, the parentheses are empty
+* The arrow operator `=>`
+* The function body
+    * If the function body is only an expression, we don't need ot use the `return` keyword and don't need to enclose the body in `{}`
+
+## Function arguments
+If a function is called with fewer arguments than the number of arguments that function has declared, the __unset__ arguments are set to `undefined`.
+Additionally, if a function is called with __more__ arguments than its number of parameters, the extra arguments are ignored.
+
+### Default arguments
+If an argument with a default value is passed in an `undefined` value, or no value at all, the default argument is used.
+
+## Exceptions
+When an error occurs in a function, instead of returning the value `undefined`, the function can throw an exception.
+Exceptions can be caught using the `catch` clause to take appropriate action.
+
+### Throwing exceptions
+An exception is thrown using the `throw` statement. As soon as the `throw` statement is executed, the execution doesn't continue to the next statement in this function, and instead, the nearest `catch` clause is executed. If the exception is not caught by any function, then the program terminates.
+
+JavaScript has built in `Error` objects. An example of which is `throw Error('value is too big')`.
+
+To catch an exception, a `try` statement and `catch` clause must be used.
+``` javascript
+try {
+    // code that throws an exception
+} catch (err) {
+    // code to handle the exception. known as the exception handler.
+}
+```
+
+### Custom handlers based on error type
+Using the `instanceof` keyword, we can determine what type of exception has been thrown and tailor our response based on this type of exception.
+
+``` javascript
+try {
+    // code that may throw an exception
+} catch (err) {
+    if (err instanceof SyntaxError) {
+        // handle a syntax error
+    } else if (err instanceof RangeError) {
+        // handle a range error
+    }
+}
+```
+
+### Using a finally block
+Code in the `finally` clause is always executed regardless of whether an exception occurs or not. A very common use of this clause is to make sure that resources acquired during the `try` block are always released even if an exception occurs (e.g. database connection, open file, network connection, etc.).
+
+``` javascript
+try {
+    // Code that acquires resources
+} finally {
+    // Release resources
+}
+
+try {
+    // code that acquires resources
+} catch (err) {
+    // handle error
+} finally {
+    // release resources
+}
+```
+
+# JavaScript - Object-Oriented Programming
