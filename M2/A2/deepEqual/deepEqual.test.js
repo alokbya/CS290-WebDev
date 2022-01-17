@@ -152,3 +152,10 @@ test('Test 27. Case 5.3: an array and a non-array object are never deep equal ev
 test('Test 28. Case 5.3: an array and a non-array object are never deep equal even if they have the same entries', () => {
     expect(deepEqual([1,2,3],{0:1,1:2,2:3})).toBe(false);
 });
+
+const arr4 = [1, 2, {name: "Harvey", age: 23}, 4];
+const arr5 = [1, 2, {name: "Harvey", age: 23}, 4];
+
+test('Test 29. Case (Optional): deep equality of arrays with nested objects', () => {
+    expect(deepEqual(arr4,arr5)).toBe(true);
+});
