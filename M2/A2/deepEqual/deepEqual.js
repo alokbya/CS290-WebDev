@@ -1,6 +1,9 @@
 'use strict';
 // Don't add or change anything above this comment.
 
+// Name: Alaaddin Hiefield
+// Class: CS290
+
 /*
 * Don't change the declaration of this function.
 */
