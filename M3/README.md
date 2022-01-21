@@ -77,7 +77,7 @@
 ## Using nodemon for automatic restart of application
 * **nodemon** automatically restarts a node app when it detects file changes in the directory
 * To use, install **nodemon** using `npm install`
-* Change the `start command` in `package.json` ot use `nodemon` instead of `node`
+* Change the `start` command in `package.json` to use `nodemon` instead of `node`
 ``` JSON
 "name": "hello_express",
 	"version": "1.0.0",
@@ -100,3 +100,44 @@
 * Package is used to bundle one or more modules together
 * These terms are often used interchangeably
 * Don't worry about it
+
+# HTML
+``` HTML
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="utf-8">
+	<title>Basic Structure of an HTML Document</title>
+  </head>
+  <body>
+  </body>
+</html>	
+```
+* `<!DOCTYPE html>` is the **document type declaration, telling the browser that this is an HTML document
+* `<html>` is the root element
+    * This typically has a lang attribute to describe the language used on the majority of the page
+* `<head>` element is used to specify metadata about the document
+    * Called the __header__ of the document
+    * Helps browser and bots understand what's on the page
+    * `<link>` tag is where we can link to a CSS file
+    * None of this info is really for the user, that goes in the `<body>` tag
+* HTML tags are not case sensitive: `<BODY> == <body>`
+    * Use lowercase tags anyway
+* Always use single quotes or double quotes for attributes... don't mix and match
+    * `<input type="checkbox" checked>`
+        * This shows an attribute with a value (checkbox), and also one without (checked)
+
+## Using Entities to display special characters in HTML Content
+* Certain characters in THML are reserved for special use
+* `<` and `>` are used for elements, but we can display literal inequality symbols by using **entities**
+* Entities are strings that begin with `&` and end with `;`
+* They are provided to display reserved characters as well as characters that might be difficult to type out on a keyboard
+
+Here are a few...
+
+| Entity | Description |
+| ------ | ----------- |
+|`&lt;`|Displays `<`|
+|`&gt;`|Displays `>`|
+|`&amp;`|Displays `&`|
+|`&quot;`|Displays `"`|
