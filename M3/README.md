@@ -128,7 +128,7 @@
         * This shows an attribute with a value (checkbox), and also one without (checked)
 
 ## Using Entities to display special characters in HTML Content
-* Certain characters in THML are reserved for special use
+* Certain characters in HTML are reserved for special use
 * `<` and `>` are used for elements, but we can display literal inequality symbols by using **entities**
 * Entities are strings that begin with `&` and end with `;`
 * They are provided to display reserved characters as well as characters that might be difficult to type out on a keyboard
