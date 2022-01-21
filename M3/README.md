@@ -113,7 +113,7 @@
   </body>
 </html>	
 ```
-* `<!DOCTYPE html>` is the **document type declaration, telling the browser that this is an HTML document
+* `<!DOCTYPE html>` is the **document type declaration**, telling the browser that this is an HTML document
 * `<html>` is the root element
     * This typically has a lang attribute to describe the language used on the majority of the page
 * `<head>` element is used to specify metadata about the document
