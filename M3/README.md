@@ -141,3 +141,69 @@ Here are a few...
 |`&gt;`|Displays `>`|
 |`&amp;`|Displays `&`|
 |`&quot;`|Displays `"`|
+
+# HTML Tags
+
+## Block-level vs. Inline Elements
+* Block-level elements break up the flow on the content and are typically displayed by browsers with a new line both before and after the element
+* Inline elements do not break the flow of content
+
+## Section, article, div
+* `div` is used to divide content
+    * Should be used as a last resort when no other element makes sense
+    * These are good for dividing content purely for stylistic reasons
+    * It conveys no meaning and just generically divisions content
+* `section` is used to make a thematic grouping of content
+    * This is for a group of content that is all related but does not quite stand on its own
+    * Usually the first child of a `section` will be a heading that describes what is in the section
+    * If there isn't a good way to classify the content with a heading, maybe a `div` should be used
+    * A `section` should only be used if all the content is related
+* `article` is structurally the same as `section` 
+    * All of its content should be related
+    * The content should be able to stand on its own as a composition
+
+##  Creating links through anchors
+* Links are created with the __anchor__ element `<a></a>`
+* The content between these tags should describe the link
+* The `href` attribute defines the link URL, where the user will be taken when clicking on the link `<a href="https://github.com/alokbya">Check out my github!</a>`
+
+    ### Links within a document
+    * Add an `id` attribute to the element you want to link to
+    * In the URL, add the value of the `id` attribute at the end, preceded by the hash symbol `#`
+    `<a href=file://C:/Docs/myfile.html#middle-section>Go to the middle section</a>`
+    * This goes to the element with the `id=middle-section`
+
+## Images
+* `img` tag is used to display images`<img src="cat.jpg" alt="picture of a cat">`
+* There are no closing tags for images
+* They are inline elements
+* `alt` is not required but good to be used to describe image for accessability
+
+# strong, b, em
+## strong
+* `strong` elements mark important stuff `<strong>I'm important</strong>`
+* Some browsers display these elements as bold, but not always (they could be displayed as red, for instance)
+* This tag is used for accessability
+
+## b
+* This makes text stylistically different from other text `<b>I'm different</b>`
+* It does not give additional meaning to the text, just differently styled
+
+## em
+* This adds emphasis to a word `<p>Emphasize <em>this</em></p>`
+* Often portrayed as __italic__
+* It adds additional meaning to the word or phrase that
+
+# Lists and tables
+## Lists
+* Unordered list `<ul>`
+    * `<li>` are the list items, portrayed as __bullets__ in an unordered list
+    ``` HTML
+    <ul>
+        <li>first item</li>
+        <li>second item</li>
+        <li>third item</li>
+    </ul>
+    ```
+* Ordered list `<ol>`
+    * The only difference between this and an __unordered__ list is that these list items will be numbered
