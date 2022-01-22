@@ -207,3 +207,55 @@ Here are a few...
     ```
 * Ordered list `<ol>`
     * The only difference between this and an __unordered__ list is that these list items will be numbered
+* Definition list `<dl>`
+    ``` HTML
+    <dl>
+        <dt>Name</dt>
+        <dd>Godzilla</dd>
+        <dt>Born</dt>
+        <dd>1952</dd>
+    </dl>
+    ```
+    * These are used for descriptive tables, and can be used kind of like an Excel sheet
+
+## Tables
+``` HTML
+<table>
+    <caption>Characteristics with positive and negative sides</caption>
+    <thead>
+      <tr>
+        <th>Characteristic</th>
+        <th>Negative</th>
+        <th>Positive</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Mood</td>
+        <td>Sad</td>
+        <td>Happy</td>
+      </tr>
+      <tr>
+        <td>Grade</td>
+        <td>Failing</td>
+        <td>Passing</td>
+      </tr>
+    </tbody>
+  </table>
+```
+* `table` element opens and closes the table
+    * Everything related to the table will be nested within these tags
+* `caption` is the title and description of the table
+* `thead` is the table header
+    * These would be rows that don't contain actual data, but instead contain things like labels signifying the data that will be in those columns
+    * The rows in this section would typically contain `th` elements
+* `tbody` is the body of the table and contains the rows that actually have data in them rather than descriptive rows that would be in the header
+    * The rows in this section typically contain `td` elements
+* `tr` is a row of the table
+    * Contains either `td` elements (data cells) or `th` elements (header cells)
+* `td` is a data cell
+    * Contains actual data
+    * To span multiple columns, use the `colspan` attribute
+* `th` is a header cell
+    * This signifies what is in the column below, or the row beside it
+[See table here](https://replit.com/@alokbya/m333#index.html)
