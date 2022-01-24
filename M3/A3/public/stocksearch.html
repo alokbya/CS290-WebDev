@@ -4,7 +4,18 @@
         <title>Stock Search</title>
     </head>
     <body>
+        <a href="./index.html">home</a>
         <h1>Stock Search</h1>
-        
+        <p>Find the stock with the <b>highest</b> or <b>lowest</b> price!</p>
+        <form action="http://localhost:3000/search" method="GET">
+           <fieldset>
+            <legend>Stock Price Search</legend>
+            <input type="radio" id="high" value="high" name="criteria">
+            <label for="high">Highest price</label>
+            <input type="radio" id="low" value="low" name="criteria">
+            <label for="low">Lowest price</label>
+           </fieldset> 
+           <button type="submit">Search</button>
+        </form>
     </body>
 </html>
