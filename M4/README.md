@@ -417,3 +417,114 @@ input[type=checkbox]:checked + label {
   font-style: italic;
 } 
 ```
+See [:checked selector](https://css-tricks.com/almanac/selectors/c/checked/)
+
+* Complex forms, where one input relies on another, often uses the `:disabled` and `:enabled` attributes to keep parts of a form from being accessed until the user provides the necessary input
+``` CSS
+input:disabled {
+  background: repeating-linear-gradient(142deg, #CCCCCC, #CCCCCC 4px, #999999 22px);
+}
+input:enabled {
+  background: white;
+}
+```
+
+### In Tables
+* Align numerical data to the right (especially if currency)
+* This is accomplished by singling out those 'child' columns with `:nth-child(#)`, like this, when the third column requires right-alignment:
+``` CSS
+th:nth-child(3),
+td:nth-child(3) {text-align:right;}
+```
+* A large table of data will be easier to read if every other row is slightly different color
+  * This is done by specifying odd/even rows:
+  ``` CSS
+    tr:nth-child(odd) {
+    background-color:beige;
+    }
+  ```
+
+  [Unicorn Validator](https://validator.w3.org/unicorn/)
+
+# The Document Object Model (DOM)
+* The model that a browser uses to render a web page
+* To render the page, the browser parses the HTML document and creates a DOM tree from it
+* Then the browser renders the page by rendering each node of the DOM tree
+* The DOM gives a representation of a document as a logical tree of nodes
+* The browser includes an API for interacting with this tree representation
+
+## Introduction to Trees
+### Nodes
+* A **tree** is made up of nodes
+* Each **node** has one parent
+* A **node** can have unlimited children 
+* If a **node** has no children, it's called a **leaf**
+* Nodes that are children of the same parent are called **siblings**
+* In a DOM tree, the order of siblings is significant as it determines which gets rendered first (and thus higher) in the page
+  
+### Root node
+* Every tree has a single **root** node that doesn't have a parent node
+* If we start from any node and continue to visit the parents of those nodes we end up at the root node
+* The root node is the **ancestor** of every other node in the tree
+* All other nodes are **descendants** of the root node
+
+### Navigating a Tree
+* If at a node in the tree, there are three primary ways of navigating to other nodes in the tree
+  1. Up the tree: we can move up the parent node of the current node
+     1. If at the root node, no more ascending is possible
+  2. Down the tree: move down to a child node
+     1. If at a leaf node, no more descending is possible
+  3. Sideways in the tree: If nodes don't have a direct reference to siblings, we need to move up to the parent of the current node and then get a list of children
+
+### No Cycles
+* Trees cannot have **cycles**
+  * If we are at node `x` and we navigate up the tree to `x's` parent then to `x's` parent's parent and so on we will never arrive back to `x`
+    * Navigation will stop at the root node
+  * If we are at a node `x` and we navigate downward we will eventually reach a leaf and will never __cycle__ back to `x`
+
+## DOM Spec & Levels
+* Versions of DOM are referred to as **levels**
+* Documentation refers to **interfaces** of the DOM because it is language agnostic
+  
+## JavaScript and DOM
+* When running in the browser, two global objects `window` and `document` are available to JS code
+* `window` represents the browser window
+* `document` represents the webpage currently loaded in this browser window
+* `document` gives us an entry point into the DOM tree that the browser has built up after it parsed the webpage
+* `document` is also available as a property of `window` i.e. `window.document`
+* Properties `document.head` and `document.body` correspond to the `head` and `body` of the document
+  
+### Example 
+``` HTML
+<!doctype html>
+<html>
+
+<head>
+  <title>My home page</title>
+</head>
+	
+<body>
+  <h1>My home page</h1>
+  <p>Hello, I am Nauman and this is my home page.</p>
+  <p>I am reading a JavaScript book. You can find it
+    <a href="https://www.amazon.com/Modern-JavaScript-Impatient-Cay-Horstmann/dp/0136502148">here</a>.
+  </p>
+</body>
+</html>
+
+
+[document] -> [doctype]
+|
+[html] -> [head] -> [title] -> (MyHomePage)
+|
+[body] ->
+|        |
+
+
+```
+The DOM tree includes nodes of the following type:
+* Document: This node type is at the root of the DOM tree
+* Document Type: This node corresponds to the `doctype` declaration in the HTML document and it is the first child of the Document node
+* Element: All elements in the HTML document are represented by Element nodes
+* Attribute: There is one attribute node in the tree which corresponds to the `href` attribute of the `a` element
+* Text: Text nodes correspond to the text content in the HTML document
