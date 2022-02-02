@@ -200,3 +200,220 @@ tr th {
 * Stylesheets can be 1000s of lines long which takes several seconds to load
 * Most devs take steps to reduce load time with minimization, Critical, and Lazyload techniques
 * [Learn more about optimization](https://pustelto.com/blog/optimizing-css-for-faster-page-loads/)
+
+# CSS Methods
+The 7 parts of the block model:
+1. Outline
+2. Margin
+3. Border
+4. Padding
+5. Background
+6. Content (such as text and images)
+7. Line-height
+
+## The block model
+* Nearly all HTML elements display as an empty block
+* The visual representation of **spacing** for these empty blocks is created by manipulating their:
+    * outline
+    * border
+    * padding
+    * content
+    * background
+    * line-height
+
+* **Margin** is the space outside of the border
+* **Outline** displays the outside edge of the margin when the block has the browser's focus
+* **Border** is the frame between padding and margin
+* **Padding** is the space between the content and the border
+* **Background colors** display behind background images which display behind content
+* **Content** are items such as text and images
+* **Line-height** is the height of one line of content
+
+* **Outline** is typically seen when an element such as an anchor or form input has `focus` via the mouse
+    * Properties include `width`, `style` and `color`
+    ``` CSS
+    outline: 1px dotted blue;
+    ```
+* **Margin** is inside the outline, which allows devs to separate one element or block from another
+  * To separate side-by-side elements (articles)
+  ``` CSS
+    article {margin: 0 2%;}
+  ```
+  * One value for all four sides `margin:2%`
+  * Two values for top/bottom `margin: 0 2%`
+  * Four values `margin: 0 2% 0 2%`
+  * Margin can mix and match units of measurement (padding cannot)
+  * Margin can use negative values
+  * Centerint an element inside of another element may require use of `auto` value
+    * To center an article in the middle of a section
+    ``` CSS
+    article {
+        margin: 0 auto;
+    }
+    ```
+
+* **Border** is the space that separates margin from padding
+  * Borders have a solid style by default but have 0 width and color until otherwise specified
+  * All three values need defined to render a border `border: 3px dotted red`
+  * For specifying border on one side of block, `-side` suffix must be defined
+  ``` CSS
+    article {
+        border-top: 4px dotted purple;
+        border-right: 6px dashed red;
+        border-bottom: 8px solid orange;
+        border-left: 10px groove yellow;
+    }
+  ```
+
+* **Padding** is the space between the border and the content
+  * This padded area can include a background color and multiple background images which display behind the content
+  * Padding can specify one, two or four values in clockwise order just like Margin
+  * Padding doesn't allow for mixing of various units (stick to one!)
+  * Headings, paragraphs, and other elements have padding by default
+  * The __Normalize__ stylesheet sets padding to - so the developer can specify a more pleasing amount of spacing
+  * Values are added to the width and/or height of a block
+    * If an article's width is set to `400px` and `10px` of padding have been added to right and left, the total width will be `420px`
+    * To **eliminate** this, the `box-sizing` property is added to elements that need it
+    ``` CSS
+    article {
+        padding: 20px;
+        width: 400px;
+        box-sizing: border-box;
+    }
+    ```
+    * Some elements already include `box-sizing` via the `Normalize.css` file
+  * Content such as `text` inherits the `body {}` elements `margin`, `padding` and `line-height`
+    * The `width` and `height` of the parent block will adjust based on the amount of content unless otherwise specified
+  * Content sits on top of background colors and images
+
+* **Line Height** property specifies the height of one line of content such as text or an image
+  * It is necessary to improve readability of long passages of text
+  * It allows verticle alignment in the middle of a parent block
+  ``` CSS
+    figure img {
+        line-height: 1;
+        vertical-align: middle;
+    }
+  ```
+
+## Grids and Positioning
+* **Float** allows one block to float right or left of another block
+  * Requires specifying width and clear
+  * Typically applied to aside and figure blocks within an article
+  * Sometimes used to define two- or three-column page layouts
+* **Columns** allows easy masonry-style gallery layout
+  * May require `column-count`, `column-gap`, `column-fill`, etc
+* **Position** using `absolute`, `relative`, `fixed` or `sticky` placement
+  * `Fixed` and `sticky` are helpful for keeping menus at the top, bottom, or side when scrolling
+* **Flex** defines how child blocks relate spatially to each other within a flexible/responsive parent block
+  * The space is distributed evenly to fill available space or shrinks to prevent content from spilling out of the parent block
+  * Has one-dimensional flow
+  * Wrapping as at the will of the browser's viewport size
+* **Grid** defines how a parent block is laid out in two-dimensions
+  * __Then__ considers how child blocks are oriented within the parent grid's cells
+  * This method often eliminates the need for media queries for complex layouts
+  * Cells can be animated
+
+## Color Value Options
+* **Names** 256 pre-defined HTML colors which have names
+  * Many represent overly-bright colors
+* **Hexadecimal and Hexa** made up of 2-digit values for red, green and blue
+  * Black is `#000000` or `#000`
+  * White is `#ffffff` or `#fff`
+  * Adjusting the RGB values will render up to 256^3 colors
+  * Alpha channel allows transparency with an addition of two more digits `#RRGGBBAA`
+* **RGB and RGBa** made up of 1, 2, or 3-digit values for red, green and blue
+  * Black is rgb(0,0,0)
+  * White is rgb(255,255,255)
+  * Alpha channel allows transparency `rgba(215,63,9,0.8) // 80% transparency`
+* **HSL and HSLa** is made up of values for `hue`, `saturation`, `luminosity/lightness` and `alpha transparency`
+  * Once a single `hue` is chosen, the `brightness/saturation` and `tone` (addition of gray) can be defined for variations based on that same hue
+
+### Example
+``` CSS
+/* Convert OSU's STRATOSPHERE blue color from RGB to HSL
+RGB: 0-106-142
+HLS: 195-100.0-27.8
+*/
+
+/* Define a variable for that color.*/
+:root {
+  --strat-blue: hsla(195, 100.0%, 27.8%, 1);
+}
+
+/* Use that color variable for the background, 
+  add a 2px white border with 5px border radius,
+  white text,
+  and 3% padding inside the button.
+*/
+button {
+ background: var(--strat-blue);
+ border: 2px solid white;
+ border-radius: 5px;
+ color: white;
+ padding: 2.5%;
+}
+
+/* Switch the colors when hovering. */
+button:hover {
+  background: white;
+  color: var(--strat-blue);
+  border: 2px solid var(--strat-blue);
+  cursor: pointer;
+}
+```
+
+## Special Selectors and Pseudo-Classes
+
+### In Forms
+* Modifying form tags increases usability
+* Helps determine where user left off, what was completed, etc.
+* `Autofocus` places cursor in first field for immediate typing
+* Color change will help users realize they can begin typing
+``` CSS
+:focus {
+    background-color: HoneyDew;
+}
+```
+or
+``` CSS
+input:focus:outline-style {
+    color: #CC0000;
+}
+```
+* To help users understand whether their input meets the required `pattern` in an `<input type="password">`
+``` HTML
+<input type="password" 
+  id="pwd" name="pwd" 
+  size="12"
+  minlength="8" maxlength="12"
+  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,12}"
+  title="Include 8 to 12 upper, lower, numbers, and characters" 
+  placeholder="Include 8 to 12 upper, lower, numbers, and characters"
+  autocomplete="current-password"
+/>
+```
+* Changing the border color from gray to red when invalid and green when valid is common: 
+``` CSS
+input:invalid {
+  border:3px solid red;
+}
+input:valid {
+  border:2px solid green;
+}
+```
+* When inputs have the mouse's focus and a color change is specified, the placeholder text may need updating to improve contrast (and ultimately better readability), so a text color change may be needed:
+``` CSS
+input::placeholder {
+    color: darkgray;
+}
+```
+See [Placeholder selectors](https://css-tricks.com/almanac/selectors/p/placeholder/)
+
+* This method uses the `type="checkbox"` attribute as well as the adjacent sibling `label` and works well if the `label` tag is placed after the `input` tag in the HTML:
+``` CSS
+input[type=checkbox]:checked + label {
+  color: green;
+  font-style: italic;
+} 
+```
