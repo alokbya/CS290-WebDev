@@ -608,3 +608,48 @@ It's generally more convenient to search for elements based on their class, id, 
   * i.e. `document.body.getElementsByClassName('warning')` returns a collection of elements that uses the `warning` class
 * `querySelector` is defined on the `document` node
   * It returns the first element which matches the CSS selector or selectors provided as an argument to the method
+
+# Modifying the DOM Tree
+This stuff will help with understanding high-level frameworks like React, Vue, and Angular...
+## Commonly Used Properties of Nodes
+* `textContent` is the most basic property of a node
+  * This contains all of the text content in a node (lol)
+  * It also contains the text content of this node's children in a string representation
+  * Setting a node's `textContent` to an empty string will clear out all of its text and that of its child nodes
+* `innerHTML` is the HTML markup of an `element` type node
+Consider the following HTML element
+``` HTML
+<p id="book">I am reading a <b>JavaScript</b> book. You can find it <a href="https://www.amazon.com/Modern-JavaScript-Impatient-Cay-Horstmann/dp/0136502148">here</a>.
+</p>
+```
+Logging the `textContent` and `innerHTML` of this p element as follows
+``` JavaScript
+let text = document.getElementById('book').textContent;
+console.log(text);
+
+let html = document.getElementById('book').innerHTML;
+console.log(html);
+```
+Here's what is printed to the browser log
+``` node
+I am reading a JavaScript book. You can find it here.
+I am reading a <b>JavaScript</b> book. You can find it <a href="https://www.amazon.com/Modern-JavaScript-Impatient-Cay-Horstmann/dp/0136502148">here</a>.
+```
+__**Note:** Using the property `innerHTML` to insert text into a webpage is a security risk. It is recommended that the insertion of plain text should be done using `textContent` and should not use `innerHTML`. [See explanation here](https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML#security_considerations).__
+
+* `style` property lets us change the style of the node
+  * Represented as a JavaScript object
+  * The property names and values correspond to the CSS property names and values of the styles associated with this node in the DOM
+  * Property names with a dash, such as `background-color` are converted to camelCase: `myNode.style.backgroundColor = 'violet'`
+* `className` gives us access to that elements' class name
+  * This prop can hold multiple class names separated by spaces
+  * To append an additional class, `newClass`, to `myElement`: `myElement.className += ' newClass'
+    * Note the space in front of `newClass`-- it is so that the original class name(s) aren't replaced and only appended to
+  
+## Modifying the Structure of DOM Trees
+* **Adding Nodes** is a two step process
+  * First, create the node by calling the appropriate method on the `document` object
+  * Second, we insert the new node at the desired position in the DOM tree
+* **Creating Nodes** is done by using several methods on the `document` object that can create nodes of specific types
+  * There is not __one__ general method to create nodes of different types
+  * **Creating Text Nodes**: `document.createTextNode()` 
