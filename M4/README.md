@@ -542,3 +542,69 @@ Any node that has one more children haas the following...
 * The property `attributes` returns all the attributes of an element
 
 ### Example
+``` JavaScript
+// rainbow.js calls different methods to traverse the DOM tree and change the background color of various elements as follows
+// * the body element becomes red
+// * the h1 heading becomes orange
+// * the paragraph element "Hello, I am Nauman and this is my home page" becomes yellow
+// * the anchor element becomes green
+
+// a function is assigned to window.onload so that this function executes after everything in the web page has been loaded in the browser window
+
+window.onload = function () {
+  let currentNode = document.body;
+  // start the debugger
+  debugger;
+  // The background of the body will be set to red
+  currentNode.style.backgroundColor = 'red';
+
+  // Go down the tree to the first element node, which is the h1 heading
+  currentNode = currentNode.firstElementChild;
+  currentNode.style.backgroundColor = 'orange';
+
+  // Move sideways to the next sibling of h1, which is the p node with text "Hello,..."
+  currentNode = currentNode.nextElementSibling;
+  currentNode = style.backgroundColor = "yellow";
+
+  // Move sideways to the next sibling which is the p node with 3 child nodes
+  currentNode = currentNode.nextElementSibling;
+
+  // Go down the tree to the first element child, which is the a element
+  currentNode = currentNode.firstElementChild;
+  currentNode.style.backgroundColor = 'green';
+
+}
+```
+Corresponding html...
+``` HTML
+<!doctype html>
+<html>
+
+<head>
+    <title>My home page</title>
+    <!--script src="rainbow.js"></script-->
+</head>
+
+<body>
+    <h1>My home page</h1>
+    <p>Hello, I am Nauman and this is my home page.</p>
+    <p>I am reading a JavaScript book. You can find it
+        <a href="https://www.amazon.com/Modern-JavaScript-Impatient-Cay-Horstmann/dp/0136502148">here</a>.
+    </p>
+</body>
+
+</html>
+```
+
+## Searching for Elements
+It's generally more convenient to search for elements based on their class, id, or their type using CSS selectors.
+
+* `getElementById` takes a `string` for the `id` of the element we are looking for and returns this element
+* `getElementsByTagName` is defined on nodes of type `element`
+  * Returns a collection of all descendant nodes with a particular tag name
+  * i.e. `document.body.getElementsByTagName('div')` will return a collection of all `div` elements in the body of the document
+* `getElementsByClassName` is available for nodes of type `element` and on the `document` node
+  * It selects all descendant elements which have the provided class name
+  * i.e. `document.body.getElementsByClassName('warning')` returns a collection of elements that uses the `warning` class
+* `querySelector` is defined on the `document` node
+  * It returns the first element which matches the CSS selector or selectors provided as an argument to the method
