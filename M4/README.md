@@ -528,3 +528,17 @@ The DOM tree includes nodes of the following type:
 * Element: All elements in the HTML document are represented by Element nodes
 * Attribute: There is one attribute node in the tree which corresponds to the `href` attribute of the `a` element
 * Text: Text nodes correspond to the text content in the HTML document
+* __**Note**__: The DOM tree in the above figure does not include all nodes in the actual DOM tree. A complete DOM tree will also include additional text nodes, one for each whitespace or newline that occurs between the HTML elements. We have not shown these additional nodes because they do not impact how this HTML document is rendered.
+
+## Traversing the Elements in a DOM Tree
+Any node that has one more children haas the following...
+* `firstElementChild`: Move down the tree to the first child node of type `element`
+* `lastElementChild`: Just like `firstElementChild` but move to the last child node of type `element`
+* `nextElementSibling`: Move sideways to the node which is both an element and a child of the same parent as the current node
+* `previousElementSibling`: Move sideways to the node which is both an element and a child of the same parent as the current node, but is the previous child of the parent
+* `children`: This contains all the children which are element nodes
+* To move up the tree, use the property `parentNode`.
+* For the attributes of an element node, the DOM API provides the methods `getAttribute(attributeName)` and `setAttribute(attributeName, value)`
+* The property `attributes` returns all the attributes of an element
+
+### Example
