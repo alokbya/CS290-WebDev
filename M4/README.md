@@ -652,4 +652,75 @@ __**Note:** Using the property `innerHTML` to insert text into a webpage is a se
   * Second, we insert the new node at the desired position in the DOM tree
 * **Creating Nodes** is done by using several methods on the `document` object that can create nodes of specific types
   * There is not __one__ general method to create nodes of different types
-  * **Creating Text Nodes**: `document.createTextNode()` 
+  * **Creating Text Nodes**: `document.createTextNode()` can be used to create new text nodes
+    * In most cases we can simply add text content using the `textContent` property discussed earlier, rather than creating a text node
+* **Creating Element Nodes**: `document.createElement()` can be used to create new elements
+    * It takes one argument which is the name of the element we want to create and returns an element of that type
+    * Initially the newly created element does not yet exist in the DOM tree, **it must be inserted**
+* **Inserting Nodes**: There are many different methods to insert nodes in a DOM tree
+    * A common way to insert is to use method `appendChild(newChild)` on a node
+    * This will add the node `newChild` as the __last__ child of the node the method was called on
+    ``` JavaScript
+    let newPara = document.createElement('p');
+    document.getElementById('bigDiv').appendChild(newPara);
+    // appends element newPara as last child of element w/ id='bigDiv'
+    ```
+* **Removing Nodes**: to remove an element, we first need to get a reference to the element and its parent
+    * On the parent node, we call the method `removeChild()` and pass it the node we want to remove __as an argument__
+
+### Example
+#### HTML
+``` HTML
+<!doctype html>
+<!doctype html>
+<html>
+
+<head>
+    <title>Creating Nodes</title>
+    <script src="script.js"></script>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div id="listContainer"></div>
+</body>
+
+</html>
+```
+#### JavaScript
+``` JavaScript
+window.onload = function () {
+    debugger;
+
+    // Create a node for an unordered list
+    let newList = document.createElement('ul');
+
+    // Create nodes for list items and add these nodes to the list node
+    for (let i = 0; i < 3; i++) {
+        let newItem = document.createElement('li');
+        newItem.textContent = 'I am Item ' + i;
+        newList.appendChild(newItem);
+    }
+
+    // Add the list node to the DOM tree by appending it to the element with id listContainer
+    document.getElementById('listContainer').appendChild(newList);
+
+    newList.children[0].style.backgroundColor = 'red';
+    newList.children[1].style.backgroundColor = 'green';
+    newList.children[2].style.backgroundColor = 'violet';
+
+    newList.children[1].className = 'bigger';
+    newList.children[1].className += ' yellow';
+
+    // Uncomment the following block of code to remove a child node
+    // and see how the childElementCount goes down when a child
+    // node is removed.
+    /*
+    console.log(newList.childElementCount);
+    newList.removeChild(newList.children[1]);
+    console.log(newList.childElementCount);
+    */
+}
+```
+
+# DOM Events
