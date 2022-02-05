@@ -724,3 +724,97 @@ window.onload = function () {
 ```
 
 # DOM Events
+**Event driven programming.** 
+* When the user takes an action, the browser dispatches an **event** based on the type of user action
+* We can use JavaScript to register functions called **event handlers**
+* When an event of a particular type occurs, the browser executes the event handler registered for that type of event
+* We can program event handler functions so that they can:
+    * Modify attributes of DOM nodes
+    * Modify the DOM tree
+    * Send HTTP requests to a web server
+* This provides interactivity to our application
+
+## Events & Event Handling
+Event handling requires specifying 3 specific things:
+1. What happened, i.e. what is the event of interest?
+2. Where did this event occur, i.e. what is the element of interest
+3. What to do, i.e. what JavaScript code to invoke when the event occurs on this element?
+
+* An event can be something a user or browser does
+* Check complete list of DOM events [W3 Schools](https://www.w3schools.com/jsref/dom_obj_event.asp)
+* Mouse-related events, include:
+    * `click` when the user clicks on an element
+    * `dblclick` when the user double clicks on an element
+    * `mousedown` when the user presses a mouse button on an element
+    * `mouseup` when the user releases a mouse button over an element
+* Keyboard-related events, include:
+    * `keydown` when a user is pressing a key
+    * `keypress` when a user has pressed the key
+    * `keyup` when a user has released the key
+* Focus-related events, include:
+    * `blur` when an element loses focus
+    * `focus` when an element gets focus
+* Form-submission event, includes:
+    * `submit` is raised when a form is submitted
+* Input event
+    * `input` is raised when an element gets user input
+* Page-related events, include:
+    * `load` raised for a page load
+    * `unload` raised for a page unload
+    * `pagehide` raised when the user moves away from a page
+    * `pageshow` raised when the user navigates to a page
+* Timer events...
+
+### Registering an Event Handler
+There are 2 ways to register an event handler to execute when an event occurs on the element
+1. Register the JavaScript code inline, as the value of an attribute with the name of the event
+    * This is not recommended since it mixes JS code with HTML elements
+2. Register the JS code using the DOM API
+    * There are 2 different syntax's for this
+        1. Use the event handler property
+            * The name of the event handler property for an event has `on` prepended to the name of that event
+                * i.e., we register the `mouseClick` on the element `myElem` for the event `click` using the statement `myElem.onClick = mouseClick;`
+        2. Call the `addEventListener` method
+            * The statement `myElem.addEventListener('click', mouseClick);` registers the same handler using the `addEventListener` method
+            * This is the most recommended way of registering event handlers
+            * If we call this function multiple times for the same element, we can register multiple functions that will all be called to handle the event
+
+### Removing an Event Handler
+* Call the method `removeEventListener` on element whose handler you'd like to remove
+    * Remove the `mouseclick` event handler for the `click` event from the element `myElem`:
+        * `myElem.removeEventListener('click', mouseClick);`
+
+## Event Object
+* When an event is raised, the browser can pass an object corresponding to this event to our handler
+    * We need to add an argument to our handler in its declaration
+* This event object created by the browser has a very large number of properties and methods, including:
+    * `type`: the type of the event (`click`, `mouseup`)
+    * `timeStamp`: the time that the event was created
+    * `target`: the element that dispatched the event
+    * `currentTarget`: the element on which the event listener was registered
+        * The difference between `target` and `currentTarget`...
+
+## Load Events
+* These events are called when a resource and all of its dependent resources have finished loading
+* A common use case is when we want to manipulate a webpage as soon as it is loaded
+    * `window.onLoad()`
+* Don't use this method
+    * The `load` event is raised only after everything in the page (including large images) has been loaded
+* To have handler execute as soon as the page's DOM is parsed, use `DOMContentLoaded`
+``` JavaScript
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM fully loaded and parsed");
+});
+```
+
+## Timers
+* These are largely used for animations or for automatic page refreshes
+* `setTimeout(myFunc, delay)` can be used to call another function after a specified number of milliseconds
+    * We can pass args to the function being called by adding them after the delay time
+    * `setTimeout(myFunc, 100)` will call `myFunc` after 100 ms
+    * `setTimeout(myFunc, 100, arg1, arg2)` will call `myFunc(arg1, arg2)` after 100 ms
+* `setInterval(myFunc, interval)` can be used to keep calling another function after an interval of the specified number of ms
+    * This returns an `intervalID` that uniquely identifies this timer
+    * Pass args similarly to `setTimeout`
+* Cancel a timer at an interval by calling the function `clearInterval(intervalId)` with the intervalId of the timer
+
