@@ -818,3 +818,35 @@ document.addEventListener("DOMContentLoaded", () => {
     * Pass args similarly to `setTimeout`
 * Cancel a timer at an interval by calling the function `clearInterval(intervalId)` with the intervalId of the timer
 
+## Prevent Default Behavior
+We can call the method preventDefault() on an event to prevent the default action for the event from taking place. An example use case is calling this method on a submit event to prevent the submission of a form if the form validation fails, as shown in the following code snippet.
+
+``` JavaScript
+let form = document.getElementById('myForm');
+	
+form.onsubmit = function(event) {
+  // Validate the form. 
+  if ( ...) {
+    // If validation fails, prevent form submission
+    event.preventDefault();
+	
+   // Show a message to the user
+  	... 
+  }
+}
+```
+
+## Event Propagation
+* The default behavior is that the event **bubbles up** the DOM tree until it gets to the root element
+* Any event handlers defined for this event type along the path will be executed for this event
+* This is called the **bubbling phase** 
+* The event handler on any element can stop and event from bubbling up the DOM tree by calling `stopPropagation` on the event `event.stopPropagation`
+
+Also...
+* It is possible to define handlers which are executed on the DOM tree starting with the `html` element and going down the tree until the element on which the event occurred is reached
+* This is called the **capturing phase** and the event is said to **trickle-down** the DOM tree
+* Using `stopPropagation` stops an event from continuing
+
+So...
+* By default, event handlers are registered for the **bubbling phase**
+* Registering event handlers for the capturing phase is a lot less common
