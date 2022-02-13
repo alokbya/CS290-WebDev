@@ -137,4 +137,4 @@ ES Modules are defined in files which have either the `.js` extension or the `.m
 * Local functions, classes or variables cannot be exported
 * There are two different syntaxes to specify exports from a module
     * Using the export keyword in the declaration
-        * We can specify exports by using the `export` keyword before the declaration of the function, class, or variable
+        * We can specify exports by using the `export` keyword before the declaration of the function, class, or variable 
