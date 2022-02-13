@@ -135,6 +135,130 @@ ES Modules are defined in files which have either the `.js` extension or the `.m
 * **Everything else** is inaccessible to code outside the module
 * Only features defined at the top level of the module can be exported
 * Local functions, classes or variables cannot be exported
-* There are two different syntaxes to specify exports from a module
-    * Using the export keyword in the declaration
-        * We can specify exports by using the `export` keyword before the declaration of the function, class, or variable 
+
+There are two different syntaxes to specify exports from a module
+1. **Using the export keyword in the declaration**
+    1. We can specify exports by using the `export` keyword before the declaration of the function, class, or variable
+    Example: model.mjs
+    * Consider the following module
+    * Only the function `readEntity()` and the variable `COUNTRY` will be available to the outside module
+    * The function `createEntity`, the class `Entity` and the variable `STATE` will be inaccessible to code using this module
+    ``` JavaScript
+    function createEntity(x) {
+        return new Entity(x);
+    }
+
+    export function readEntity() {
+        return new Entity("This be the entity");
+    }
+
+    class Entity {
+        constructor(name) {
+            this.name = name;
+        }
+    }
+
+    const STATE = 'TX';
+
+    export const COUNTRY = 'USA'; 
+    ```
+2. **Using an export statement**
+    * We can specify the names of the exported features using an `export` statement
+    * The following code exports the exact same features as previous
+    ``` JavaScript
+    function createEntity(...){ ...}
+
+    function readEntity(...){ ... }
+
+    class Entity { ... }
+
+    const STATE = 'TX';
+
+    const COUNTRY = 'USA';
+
+    export { readEntity, COUNTRY }
+    ```
+
+* Using the `export` statement provides one additional functionality: 
+    * We can provide __different names__ for the exported features
+    * The following `export` statement exports the function `readEntity` with the name `selectEntity`
+    * Code using the module can only access this function using the name `selectEntity`
+    ``` JavaScript
+    export { readEntity as selectEntity, COUNTRY }
+    ```
+
+## Using import to Import Named Features
+* We import named features from a module using the `import` statement along with the name of the features we want to import and the URL of the file containing the module
+* Import 2 features from a file in the same directory like so:
+``` JavaScript
+import { readEntity, COUNTRY } from './model.mjs'
+```
+
+### Details of Import Functionality
+* We can select which features we want to import (we don't need to import everything)
+* We can import all __exported__ features into an object using `*`
+    * For example `import * as Model from './model.mjs'` imports all features exported by this module file
+    * We can use these features, then, by accessing them from this object, e.g. `Model.readEntity`
+* We can rename imported features
+    * This might help prevent a __name clash__
+    ``` JavaScript
+    // renaming imports
+    import { readEntity, COUNTRY as DEFAULT_COUNTRY } from './model.mjs'
+    ```
+
+## Default Export and Import
+### Default Export
+* We can tag **at most** one function or class as `export default`
+* This can be done in addition to exporting any additional number of features using the named export syntax
+``` JavaScript
+function createEntity(...){ ...}
+
+export default function readEntity(...){ ... }
+
+class Entity { ... }
+
+const STATE = 'TX';
+
+export const COUNTRY = 'USA';
+```
+
+### Default Import
+* We import hte default export of a module
+``` JavaScript
+import readEntity from './model.mjs'`
+```
+* Importing the **default** export does not require using the curly braces `{}`
+* Importing named export requires that we **do** surround the feature with curly braces
+* We can choose the name with which we import the feature
+    * If we wanted to use the name `selectEntity` for the default export from `model.mjs`:
+    ``` JavaScript
+    import selectEntity from './model.mjs'`
+    ```
+* We can import **both default and named exports** from a module in a single statement
+``` JavaScript
+import readEntity, {COUNTRY} from './model.mjs'
+```
+
+## ES Modules and strict mode
+* An additional feature ES modules provide is that the entire contents of an ES module are **automatically in strict mode** 
+* So, we no longer need to add `use strict` at the start of an ES module to enforce strict mode
+
+## CommonJS Modules in Node using exports and require()
+* Originally, importing modules followed the `CommonJS Module System` convention
+
+### Importing Functionality using the Function require
+* With CommonJS modules, we import features using the `require()` build-in function
+* This function takes one argument which identifies the module or the local file we want to import into our code
+    * To import a module, we provide its name and the module is loaded from the `node_modules` directory
+    * To import a local file, we provide the path to the file
+
+### Example: require
+* Here we are importing the module named `cities` which will be loaded from the `node_modules` directory
+``` JavaScript
+'use strict';
+
+const cities = require('cities');
+let myCity = cities.zip_lookup('78704');
+console.log(myCity);
+```
+* If we wanted to import a file named `model.js` which was in the same directory as the file which was importing it, we would use `require(./model.js)`
