@@ -262,3 +262,57 @@ let myCity = cities.zip_lookup('78704');
 console.log(myCity);
 ```
 * If we wanted to import a file named `model.js` which was in the same directory as the file which was importing it, we would use `require(./model.js)`
+
+### Exporting Functionality Using the exports Object
+* The function `require()` reads the module/file passed to it as an argument
+* It executes this module/file and returns the `exports` object from the file
+### Example: Using exports
+``` JavaScript
+function createEntity(...){ ...}
+
+exports.readEntity =  function(...){ ... }
+
+class Entity { ... }
+
+const STATE = 'TX';
+
+exports.country = 'USA';
+```
+* Let's say we import this file using the following: `const MyModel = require('./model.js')`
+* This will cause `model.js` to be read and evaluated
+* The `exports` object from `model.js` will be returned and it will be assigned to the variable `myModel`
+* `myModel` will have two properties
+    * `country` with the value `USA`
+    * `readEntity` whose value will be the corresponding function defined in `model.js`: `{ country: "USA", readEntity: [Function] }`
+
+## Using ES Modules with Node
+* When running our own code on Node, we can write ES modules and Node will support these modules
+* We can import both ES and CommonJS modules using the ES style `import` keyword
+* To support ES module functionality, Node requires us to do either: 
+1. Use the extension `.mjs` for files which want to export modules using the ES syntax, and for files which want to import modules using ES syntax
+2. Use the extension `.js` for such files **and** also add a top level property "type" with the value "module" in the file `package.json`
+
+### Example: Using import for express
+We now rewrite our "Hello World" Express example from Module 3 using ES Module syntax in the following file `server.mjs`. Since the file is defined with the extension `.mjs`, Node will treat it as an ES Module. So instead of importing the express module using `require()`, we use `import` to import this module.
+
+``` JavaScript
+'use strict';
+
+import express from 'express';
+
+const app = express();
+const PORT = 3000;
+
+app.get("/", (req, res) => {
+    res.send("Hello World!");
+});
+
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}...`);
+});
+```
+What if we tried to import the express module using `require()`? For example, if we use the following statement in our `server.mjs` file, what will happen?
+``` JavaScript
+const express = require('express');
+```
+This will cause an error because Node treats a file with the `.mjs` extension as an ES module and the function `require()` is not available in an ES module.
