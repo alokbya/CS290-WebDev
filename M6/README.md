@@ -433,3 +433,52 @@ app.use('/xyz', logUrls, (req, res, next) => {
     4. `next` function
 * If the error-handling middleware does not call `next()`, **it should return a response**, otherwise the client will hand waiting for the response and **eventually timeout**
 * If we don't call `next()` in the error-handling middleware, we still must declare the function with **four** arguments (otherwise it'll be treated like regular ol' middleware)
+
+# Express API for HTTP
+## Express API
+* Route handlers and middleware functions in Express receive `request` and `response` objects as parameters
+
+## The Request Object
+* The API for the `request` object (Express) can be found [here](https://expressjs.com/en/api.html#req)
+*  `req.query`
+    * This object contains the body of the request as name-value pairs
+    * The server needs to use middleware to parse the body in order to have the body of the HTTP request available as `req.body`
+    * Most web apps support request bodies in the following two formats:
+        1. The body can be sent by submitting a form using HTTP `POST`
+            * The value of the header `Content-Type` will be `application/x-www-form-urlencoded`
+            * Parse with `app.use(express.urlencoded({extended: true}));`
+        2. The body can be sent as JSON
+            * The value of the header `Content-Type` will be `application/json`
+            * Parse with `app.use(express.json());`
+* `req.headers`
+    * This object contains all the request headers as key-value pairs
+    * `Keys` are the header names and `Values` are header values
+    * We can log all request headers with:
+    ```JavaScript
+    for (const property in req.headers) {
+        console.log(`${property}: ${req.headers[property]}`);
+    }
+    ```
+
+## The Response Object
+* The API for the `response` object (Express) can be found [here](https://expressjs.com/en/api.html#res)
+* `res.set(name, value)`
+    * We can set response headers using this method
+    * We typically don't manually set any headers, except perhaps `Content-Type`
+* `res.type(type)`
+    * A convenient method to set the `Content-Type` header instead of using `res.set`
+    * By default, Express sets content type in `response` to `text/html`
+    * We can set appropriate MIME type by using this method
+* `res.status(code)`
+    * By default, Express sets status code to `200`
+    * If we want to set a different value, we can use this method
+    * `res.status` **returns the response object**
+        * This means we can chain calls `res.status(400).json({error: 'Must provide an id'});`
+* `res.send(body)`
+    * Calling this method sens the response to the client with the response body set to the specified argument
+    * If we are sending back JSON in body, we should use `res.json`
+* `res.json`
+    * This method sends back JSON to the client
+    * Sets `Content-Type` header to `application-json`
+    * Using this method, we can send any JSON value as the response body
+        * **Including JSON arrays!**
