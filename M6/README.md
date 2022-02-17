@@ -316,3 +316,120 @@ What if we tried to import the express module using `require()`? For example, if
 const express = require('express');
 ```
 This will cause an error because Node treats a file with the `.mjs` extension as an ES module and the function `require()` is not available in an ES module.
+
+# Express Middleware
+### Overview
+* To define routes, we used the `app.METHOD` API
+* To serve static files, we added the following statement to our server programs:
+    * `app.use(express.static('public'));`
+* When our server program needed to process forms, we added the following statement to our program
+    * `app.use(express.urlencoded({extended: true}));`
+This exploration will touch on what the `app.use()` API does, and how we can leverage it to add functionality to our server programs.
+
+## What is Middleware
+* A middleware is simply a function that Express applies to an HTTP request in our Express programs
+* We can think of an Express program as a pipeline of middleware functions which are applied to an HTTP request
+* Most middleware functions take three arguments
+    * A request object
+    * A response object
+    * A `next()` function
+* Another form of middleware functions, called Error-handling middleware, takes four arguments
+    * An error object
+    * A request object
+    * A response object
+    * A `next()` function
+* Each middleware function in an Express ap is associated with a path (or route)
+    * A middleware function applies to an HTTP request only if that function's path matches the URL of the request
+* The middleware functions with routes matching a request's URL are applied in the exact order of how they appear in the code of our Express app, **thus setting up a pipeline of functions**
+* A middleware function can make changes to the request and response objects passed to it as arguments
+* A middleware function can pass the request to the next middleware function in the pipeline by calling the `next()` function that is provided to it as an argument
+* The pipeline of middleware functions terminates when:
+    * Either all the middleware functions matching the request have been applied to the request
+    * Or, a middleware function does not call `next()` and thus does not pass the request to the next function in the pipeline
+        * Typically, this is done by a middleware function which sends back the HTTP response
+
+## app.METHOD
+* When defined with two arguments `request` and `response` the route handler does not invoke middleware
+* When defined with the additional `next` parameter (or any third param), we have access to the `next()` function
+    * This allows us to invoke middleware (additional functions/route-handlers)
+```JavaScript
+// route handler 1
+app.get("/", (req, res, next) => {
+    console.log("/ endpoint");
+    next(); // no other handlers with this endpoint, res.send() not present, so error thrown
+});
+// route handler 2
+app.get("/abcd", (req, res, next) => {
+    console.log("handling and passing to next");
+    next(); // res.send() not defined, OK because passing request down middleware pipeline
+});
+// route handler 3
+app.get("/abcd", (req, res, next) => {
+    console.log("receiving req from above method, and not calling next");
+    res.send("sending back request");
+})
+
+// order of route handlers matters!
+// if handler 3 was implemented before handler 2, response would send back to user and handler 2 would not "see" request
+```
+### Calling next() and Sending the response
+* If handler returns response and then calls `next()`
+    * The next middleware function is invoked, but no responses will be returned to client (will be ignored)
+
+### Not Calling next() and Not Sending Response
+* If handler does not return response or call next()
+    * Pipeline terminates and no other handlers (middleware) will be invoked
+    * No response gets back to the client which leads to a client-side timeout and report of error, e.g. network error
+
+## app.use()
+* We can also use `app.use()` to implement middleware
+* This is how we served static files (from `/public` directory): `app.use(express.static('public'));`
+1. We are passing the return value from `express.static()` to `app.use()`
+    * `express.static()` is not the middleware function
+    * `express.static()` **__returns the middleware function__** to `app.use()`
+2. The call to `app.use()` does not specify an argument for the path for which this middleware is applied
+    * `app.use()` has default value of `/` for path argument
+        * middleware registered with the default value can be applied to every request by the server program
+    * We can register a middleware function using `app.use()` to apply only to specific paths by passing the desired path as an argument to `app.use()`
+3. **The middleware function will apply to request regardless of the HTTP method** as long as the **path matches the URL** of the request
+
+### Example: Defining and Registering our Own Middleware Function
+```JavaScript
+// The statements to register this function must appear before any other middleware that matches this URL
+// Otherwise, this logging middleware will never be invoked because the pipeline will terminate before its execution
+app.use('/abcd', (req, res, next) => {
+    console.log(`URL = ${req.originalUrl}, method = ${req.method}`)
+    next();
+});
+```
+
+### Example: Using Named Middleware Functions
+```JavaScript
+// We can pass this method to any route handler to execute this middleware
+const logUrls = (reqm res, next) => {
+    console.log(`URL = ${req.originalUrl}, method = ${req.method}`);
+    next();
+}
+```
+
+* A route handler can be passed multiple middleware functions 
+    * Each will be added to the pipeline of middleware for that route
+
+```JavaScript
+// logUrls will execute and call next()
+// then the anonymous function will execute and send response to client
+app.use('/xyz', logUrls, (req, res, next) => {
+    res.send("Hello from xyz");
+});
+```
+
+## Error-handling Middleware
+* If middleware takes __four__ arguments, it becomes error-handling middleware
+* Error-handling middlware should be place **after** all the route handlers and other non-error handling middleware
+* The four parameters
+    1. `error` object
+    2. `request` object
+    3. `response` object
+    4. `next` function
+* If the error-handling middleware does not call `next()`, **it should return a response**, otherwise the client will hand waiting for the response and **eventually timeout**
+* If we don't call `next()` in the error-handling middleware, we still must declare the function with **four** arguments (otherwise it'll be treated like regular ol' middleware)
