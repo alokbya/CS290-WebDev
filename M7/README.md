@@ -336,3 +336,91 @@ The function `deleteById` shown below calls the Mongoose method `deleteOne` to d
 * We add 4 route handlers, one for each of the 4 CRUD operations
 * For now we use a simple approach of adding route handlers with the URLs `create`, `retrieve`, `update`, `delete` with the `GET` HTTP method
 * The params we need to pass to functions in our models layer are provided as query params in the HTTP request to the corresponding route handler
+
+# Advanced Operations Using Mongoose
+Now, we are looking at creating more advanced filters that can be used in querying collections, as well as the details of some Mongoose methods for updating data.
+## Boolean Operators for Complex Conditions
+* Mongo supports specifying conditions using many different bool operators such as AND, OR, NOR, etc.
+
+### Filtering Documents Using AND
+* We can require that the result of a query contains only those docs matched by all of the specified conditions, by calling the [and method on a query](https://mongoosejs.com/docs/api.html#query_Query-and) with an **array containing all the filters we want to apply to the document**
+    * Note if the array is empty then all docs will match the query
+
+Example: and
+``` JavaScript
+let filters = [{year:2004}, {language: 'English'}];
+```
+We can use these filters to return the matching documents as follows:
+``` JavaScript
+const findMoviesUsingAnd = async (filters) => {
+    const query = Movie.find();
+    if(filters.length > 0){
+      query.and(filters);
+    }
+    return query.exec();
+}
+```
+In the previous exploration, to retrieve documents we had called `Movie.find()` with **an object** to get back a `Query` object.
+
+* When we passed an empty object to `Movie.find()`, the query returns all the documents in the collection.
+* When we passed a non-empty object, e.g., `{year: 2018}`, to the query then the documents matching that one filter were returned.
+
+Contrast this with the above example where we call `Movie.find()` without an argument to get a `Query` object.
+
+* If the argument filters is a non-empty array, then we pass this **non-empty array of filter objects** to the method `query.and()` and then execute the query to get those documents that **match all the filters** in that array AND-ed together.
+* If the argument filters is an empty array, we don't call `query.and()` and simply execute the query which will return all the documents in the collection.
+
+### Filtering Documents using OR
+* We can require that a query result only contains documents that match **any of the specified conditions** (instead of **all** specified conditions), with an array containing all filters to be applied on the documents.
+  * If array is empty, all docs will match the query
+
+Example: or
+* Consider we want to find all movies that were released in 2004 or for which the language was English
+``` JavaScript
+let filters = [{ year: 2004}, {language: 'English'}]
+```
+* We can call use these filters to return the matching documents as follows:
+
+``` JavaScript
+const findMoviesUsingOr = async (filters) => {
+    const query = Movie.find();
+    if(filters.length > 0){
+      query.or(filters);
+    }
+    return query.exec();
+}
+```
+
+## Updating Existing Documents
+* To update a document without first querying for it (to verify it exists), we can use `updateOne`, or `findOneAndUpdate`, as opposed to `replaceOne` described earlier (which demands we already have access to this document)
+
+### findOneAndUpdate
+* We can see it takes three params: conditions `object`, update `object`, and options `object`. Docs found [here](https://mongoosejs.com/docs/api.html#model_Model.findOneAndUpdate)
+* `conditions`
+  * This param is of type object and is used to match documents
+  * If multiple docs match the condition, then one matching doc is picked at random
+  * To match a document with multiple conditions AND-ed together, specify all the conditions as properties of this object:
+  * Examples:
+    * To match a document using the value of `_id` we can use the following condition
+      * `let condition = {"_id": document_id};`
+    * To match a document whose prop `year` has the value 2008 and the prop `language` has the value English...
+      * `let conditions = {"year": 2008, "language": "English"};`
+* `update`
+  * This param is of type object and contains the updates that we would like to make to the document
+  * To update a prop of this document, specify it as a property of this object
+  * To update multiple properties of the document, specify each of these properties of this object
+  * Any property that is not specified in this object is left **unchanged** 
+  * Examples
+    * To update only the prop `year` of a doc to the value 2019, while leaving all other props unchanged, we specify the following value for the `update` param
+      * `let update = {"year": 2019};`
+    * To update the prop `year` of a doc to the value 2019 and the prop `language` to the value Punjabi, while leaving other props unchanged, we specify the following value for the `update` param
+      * `let update = {"year": 2019, "language": "Punjabi"};`
+* `options`
+  * The `options` param allows us to specify special conditions
+  * An example case of this would be if we wanted to return the updated document to the user after the query
+    * For this we could specify the `new` options in our query as follows:
+      * `let options = {new: true};`
+
+This function returns a promise
+* If no doc was found matching the `conditions` arg, then the value of the promise resolves to **null**
+* If a doc was found matching the `conditions` arg, then the promise resolves to that document
