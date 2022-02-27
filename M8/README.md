@@ -113,3 +113,28 @@ When an HTTP request contains a body, the server needs to know how to interpret 
 * The key and the value in a pair are separated by a `=`
   * Different key-value pairs are separated by `&`
 * Any non-alphanumeric characters in keys or in values are **URL encoded**
+
+## HTTP Status Codes
+The first line of an HTTP response is the status line with the format `HTTP/Version Status-code Reason-phrase`. The status code indicates whether a specific HTTP request completed successfully or if it encountered an error or if some further action needs to be taken.
+Status codes are a 3 digit number with the first digit defining the **category** of the response
+
+### 100-188: Informational responses
+* Status codes in this category indicate that the request was received and the server is continuing to process it
+* You are unlikely to encounter informational response codes
+
+### 200-299: Successful responses
+* Status codes in this category indicate that the request was successfully processed by the server
+* If a CRUD operation was successfully executed to process the request, the response code should be in the 200s
+Some examples include...
+|Code |Reason-Phrase |Notes |
+|-|-|-|
+|200|OK|The request succeeded and the response body has the needed information.|
+|201|Created|The request succeeded and a new resource was created. Typically the URL of the newly created resource is included in response header `Content-location`. Common with `post`.|
+|204|No content|The request succeeded, but there is no content to return in the body. Common with `delete` or `put`.|
+
+### 300-399
+* The server sends back status codes in this category when the client needs to take additional action to complete the request
+* These codes are mostly used for URL redirection
+* For example, now most websites are configured to redirect requests that use `http` as the scheme in the URL to instead use a URL with `https` as the scheme.
+  * The URL to use is in the response header `Location`
+  * By default, browsers automatically follow the redirect and send a request for the `https`
