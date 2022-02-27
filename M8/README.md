@@ -126,9 +126,10 @@ Status codes are a 3 digit number with the first digit defining the **category**
 * Status codes in this category indicate that the request was successfully processed by the server
 * If a CRUD operation was successfully executed to process the request, the response code should be in the 200s
 Some examples include...
+
 |Code |Reason-Phrase |Notes |
-|-|-|-|
-|200|OK|The request succeeded and the response body has the needed information.|
+|-----|--------------|------|
+|200  |OK            |The request succeeded and the response body has the needed information.|
 |201|Created|The request succeeded and a new resource was created. Typically the URL of the newly created resource is included in response header `Content-location`. Common with `post`.|
 |204|No content|The request succeeded, but there is no content to return in the body. Common with `delete` or `put`.|
 
