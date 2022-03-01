@@ -139,3 +139,42 @@ Some examples include...
 * For example, now most websites are configured to redirect requests that use `http` as the scheme in the URL to instead use a URL with `https` as the scheme.
   * The URL to use is in the response header `Location`
   * By default, browsers automatically follow the redirect and send a request for the `https`
+Some examples include...
+
+
+|Code|Reason-Phrase |Notes |
+|----|--------------|------|
+|301 |Moved Permanently|The resource has permanently moved. Follow the URI in the location header and in future send requests to that URI.|
+|302|Found|The resource has temporarily moved. Follow the URI in the location header, but do not change the request URI in future requests|
+|303|See Other|Server is redirecting to another resource whose URI is in the location header. For example, a resource was created and its URI is in the location header.|
+|304|Not Modified|The resource has not modified. Essentially the server is telling the client to use the cached copy of the resource.|
+
+### Example: Redirection
+* Open your browser and “Dev Tools,” and go to the “Network” tab in “Dev Tools”
+* Enter the URL http://oregonstate.edu/ in the browser.
+* You will see a lot of network traffic logged in the “Network” tab.
+* Towards the top you should see a response with status code 301 Moved Permanently.
+* The Location header in this response has the value https://oregonstate.edu/.
+* The URL in the browser is now https://oregonstate.edu/ because the browser automatically sent a request for this URL after receiving the response with 301 status code.
+
+### 400-499: Client errors
+* The server program sends back a response in this category when the request was not valid and the server program could not fulfill it
+Some examples include...
+
+|Code|Reason-Phrase|Notes|
+|-|-|-|
+|400|Bad Request|The server cannot process the request because of a client error. For example, when a request is missing some required parameter.|
+|401|Unauthorized|The requested resource requires authentication, but the client is not authenticated. For example, the server does not know who is making the request.|
+|403|Forbidden|The client is authenticated but is not authorized to access the requested resource. The server knows who is making the request, but the requestor does not have privileges to carry out the requested operation on the resource.|
+|404|Not Found|The requested resource is not found on the server.|
+
+### 500-599: Server errors
+* When codes in this category are sent by a server when the request seemed valid, but the server fails to successfully process it.
+* We should typically log such error responses in our server programs so that we can investigate them and fix the issues that caused the error
+Some examples include...
+
+|Code|Reason-Phrase|Notes|
+|-|-|-|
+|500|Internal Server Error|This error code is typically a result of a coding error. For example, if our code throws an exception, and we don't catch and handle it correctly, ti can get reported as a `500` status code by the Express server.|
+|502|Bad Gateway|This error code is typically sent by the web server when it receives an invalid response from some other server, or a request it sent to another server times out. Misconfiguration can sometimes cause these errors.|
+|503|Service Unavailable|This error code is sent by the server when it is not capable of handling a request. This might happen because the server is overloaded or it is down for maintenance.|
