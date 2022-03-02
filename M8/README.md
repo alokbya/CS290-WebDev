@@ -256,3 +256,159 @@ res.cookie('favorite_icecream', 'mintChocolateChip', {signed: true});
 ``` JavaScript
 const favoriteIcecream = req.signedCookies.favorite_icecream;
 ```
+
+In the following example, the Home Page served to the user asks them to pick a preferred language and submit a form. The submission of the form is handled by the route `POST /` and its handler sets a cookie with name `language` and value of the language chosen by the user. When the user visits the route `GET /greetings`, the route handler gets the value of the preferred language from the cookie `language` and displays the greeting in the chosen language. The relevant parts of `server.mjs` file are shown below
+``` JavaScript
+import express from 'express';
+import cookieParser from 'cookie-parser';
+
+const COOKIE_SECRET = 'sOme4rAnDom$tringCangohere';
+
+// Install cookie-pasrser middleware
+app.use(cookieParser(COOKIE_SECRET))
+
+...
+
+/**
+ * Actual web apps should use locale to determine the language preference.
+ */
+app.post('/', (req, res) => {
+    // Get user's language preference
+    let language = req.body.language;
+
+    // Set cookie
+    res.cookie('LANGUAGE', language);
+
+    // Send link to greeting page
+    res.send('<a href="/greeting">Click</a> to get your greeting');
+});
+
+/**
+ * Actual web apps should use locale to determine the language preference.
+ */
+app.get('/greeting', (req, res) => {
+    // Find the preferred language from the cookie and
+    // display the greeting in that language
+    const greeting = req.cookies.LANGUAGE === 'spanish'
+        ? 'Hola Mundo!'
+        : 'Hello World!';
+    res.send(greeting);
+});
+
+/**
+ * Send back info based on whether the request includes a 
+ * signed cookie with name: favorite_icecream 
+ * If the cookie isn't found on the request, add it to the response.
+ */
+app.get('/signedCookie', (req, res) => {
+    let found = false;
+    if (req.signedCookies.favorite_icecream !== undefined) {
+        found = true;
+    } else {
+        // Add a signed cookie to the response
+        res.cookie('favorite_icecream', 'mintchocolateChip', { signed: true });
+    }
+    const message = found ?
+        `Your favorite icecream is ${req.signedCookies.favorite_icecream}`
+        : `signedCookie was not found. We are setting it.`
+    res.send(message)
+}); 
+```
+
+## HTTP Sessions
+* HTTP sessions are another abstraction store state
+* Users might not like storage of lots of data (from cookies) on their machines
+* A user can also delete cookies which means things like user preferences can be lost
+
+So...
+* Most websites store user info, including preferences, on the server side (e.g. database)
+* When a user logs in, the site creates a session object on the server and sends a cookie with a unique id to the user
+* When subsequent requests contain a cookie with this unique session ID, the site can link requests from this user and can store data relevant to this user's interaction with the website in the session object
+
+### HTTP Sessions and Express
+* To use sessions in Express apps, we can use [express-session middleware](https://www.npmjs.com/package/express-session)
+* HTTP sessions are built on top of cookies, so in addition to installing `express-session` middleware, we also need to install `cookie-parser`
+* We must include `express-session` middleware __**after**__ including the `cookie-parser` middleware:
+``` JavaScript
+// Sessions use cookie, so include the cookie parser middleware before the express session middleware
+app.use(cookieParser('some cookie secret'))
+
+app.use(expressSession({
+    secret: 'some cookie secret',
+    cookie: { maxAge: 3600000 }
+}))
+```
+
+### Configuring an HTTP Session in Express
+* The `express-session` middleware takes a configuration object as a parameter
+  * Details fount [here](https://www.npmjs.com/package/express-session)
+* `secret`: The string to be used to sign the cookie created for the session ID
+* `cookie`: Options for the cookie to be created for the session ID
+* `key`: The name of the cookie that will store the value of the unique session identifier.
+  * If not specified, the default name is `connect.sid`
+
+### Getting and Setting Session Values
+* If we setup HTTP sessions in Express app
+  * The request object has a property `session` of type `object`
+* We can set properties on the `session` object to store data in the session and access these properties to get data from the session
+``` JavaScript
+req.session.language = 'English';
+const langPreference = req.session.language;
+```
+
+#### **Notes***
+* The primary difference between `session` and `cookie` is that the session object stores a `cookie` in the client browser which contains an `id` to then lookup information related to the `session` in an in-memory key-value store
+* `cookies` are just a client-side key-value store
+
+### Example: Storing and Getting Data from Session
+The following example is a variation on the cookie example we discussed earlier in this exploration. In this example, we store the language preference sent in the HTTP request as a property on the HTTP session in the route handler for the endpoint `POST /`. The route handler for `GET /greeting` gets the value of the language preference from the session and displays the greeting in the preferred language of the user.
+
+``` JavaScript
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import expressSession from 'express-session';
+
+...
+
+const COOKIE_SECRET = 'sOme4rAnDom$tringCangohere';
+
+// Sessions use cookie, so include the cookie parser middleware before the express session middleware
+app.use(cookieParser(COOKIE_SECRET))
+
+/*
+* We are setting the age of the cookie to 60*60*1000 milliseconds or 1 hour
+*/
+app.use(expressSession({
+    resave: false,
+    saveUninitialized: false,
+    secret: COOKIE_SECRET,
+    cookie: { maxAge: 3600000 }
+}));
+
+app.post('/', (req, res) => {
+    // Set language preference on the session
+    req.session.language = req.body.language;
+    // Send link to greeting page
+    res.send('<a href="/greeting">Click</a> to get your greeting');
+})
+
+app.get('/greeting', (req, res) => {
+    // Find the preferred language from the session and
+    // display the greeting in that language
+    const greeting = req.session.language === 'spanish'
+        ? 'Hola Mundo!'
+        : 'Hello World!';
+    res.send(greeting)
+});
+```
+
+### Configuring Session Storage
+By default, Express stores session objects in memory. This is called **memory store** and can be problematic for two reasons:
+1. When the server goes down, session data is lost
+2. When the site is scaled out (multiple servers), users may hit different servers during separate requests, in which case session memory will differ
+
+* Because of this, lots of real world Express apps store session information in a database instead of memory
+* This way, any of the multiple Express servers can get the session information by querying the db with the session ID cookie
+* `express-session` middleware helps with this
+  * It stores session data in any of the long list of supported databases found [here](https://www.npmjs.com/package/express-session#compatible-session-stores)
+  * [Mongo information found here]()
