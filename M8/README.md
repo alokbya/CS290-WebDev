@@ -412,3 +412,161 @@ By default, Express stores session objects in memory. This is called **memory st
 * `express-session` middleware helps with this
   * It stores session data in any of the long list of supported databases found [here](https://www.npmjs.com/package/express-session#compatible-session-stores)
   * [Mongo information found here]()
+
+# REST API
+* React apps are SPAs (Single Page Application)
+* SPAs download the HTML, CSS, JavaScript for a web app from the web server to the browser exactly once
+* Once the app is loaded in the browser, the JS code makes changes to the DOM so that the user feels that they are navigating to a different page
+* After the initial bundle of files has been downloaded, the web app communicates with the server for various data operations:
+  * Create data
+  * Fetch (retrieve) new data
+  * Update data
+  * Delete data
+* Server responses are generally in JSON
+* Server program exposes its functionality as an API which is accessible over HTTP and the SPA makes the calls on this API
+* The term **web service** is used for an API that can be accessed using the HTTP protocol
+
+### Collection and Resources
+* A server manages collections of resources
+* Example Movie App:
+  * Resource: A movie
+  * Collection: All the movies
+* Example Photo App:
+  * Resource: a photo
+  * Collection: all the photos
+* Most apps will have many collections
+
+### Identify Collections & Resources via URLs
+* Collections and resources are identified via unique URLs
+* Example Movie App:
+  * Collection of movies
+    * http://localhost:3000/mobies
+  * Movie with ID xyz123
+    * http://localhost:3000/movies/xyz123
+  * Each movie has a unique ID => Each movie has a unique URL
+
+### CRUD Operations - Create
+* A RESTful API supports CRUD operations via HTTP methods
+* Create using POST
+```
+POST http://localhost:3000/movies HTTP/1.1
+content-type: application/json
+{
+  "title": "Sorry to Bother You",
+  "year": 2019,
+  "language": "English"
+}
+```
+
+### CRUD Operations - Read
+* Read using GET
+* Get all movies
+```
+GET http://localhost:3000/movies HTTP/1.1
+```
+* Get a particular movie
+```
+GET http://localhost:3000/movies/6516841354asd864 HTTP/1.1
+```
+
+### CRUD Operations - Update
+* Update using PUT
+```
+PUT http://localhost:3000/movies/6516841354asd864 HTTP/1.1
+
+content-type: application/json
+{
+  "title": "Sorry to Bother You",
+  "year": 2018,
+  "language": "English"
+}
+```
+
+### CRUD Operations - Delete
+* Delete using DELETE
+```
+DELETE http://localhost:3000/movies/6516841354asd864 HTTP/1.1
+```
+
+### Stateless Server
+* Keep the Server stateless
+* Each HTTP request happens in isolation
+* The client must send all the information needed to process a request within the request itself
+* The server cannot remember info from the previous request by a client to service a subsequent request from that client
+
+### Example: Non-RESTful Service
+* Example: a client wants to make two requests
+  * First: Get movies for year 2018
+  * Second: Get movies for the year 2019
+* Example: Non-Restful Service
+  * API support requests for movies in the "following" year
+    * Without specifying which year they are referring to
+  * First request: Get movies for 2018
+    * Server stores 2018 in an HTTP session tied to this client
+  * Next request: Get movies for following year
+    * Server looks up the HTTP session
+    * Finds out the previous request was for 2018
+    * Responds by sending back the movies for 2019
+
+### Implementing REST API Using Express
+* We already know how to 
+  * Add routes based on HTTP method => can implement CRUD operations
+  * Access request body => for POST and PUT
+  * Set response status codes
+  * Set content-type on response
+* How can the route handler access the value specified in a particular segment of the URL?
+  * http://localhost:3000/movies/**6516841354asd864**
+  * ROUTE PARAMETERS
+
+### Route Parameters
+* In path argument of a route
+* Specify which parts of the URL path should be made available to the route handler
+  * Example path argument: `/movies/:id`
+* These parts of the URL are called **route parameters** 
+  * Example: id is the route parameter
+* Express populates an object req.params
+  * With path arguments as properties of params
+  * Corresponding part of the URL as value of the property
+
+### Route Parameters: Example
+* Route handler
+``` JavaScript
+app.get('/movies/:id', function (req, res) {
+  const movieId = req.params.id;
+});
+
+// Example request: http://localhost:3000/movies/xyz123
+// req.params = {"id": "xyz123"}
+```
+
+### Implementing Search
+* In addition to CRUD operations, many REST APIs also support searching collections
+* The search URL is typically supported via the GET method
+* The exact pattern of the URL varies across implementations
+* As an example our API can support searching over the movies collection via the URL `movies/search`
+  * We can require that the properties by which to search the movies should be provided as query parameters
+  * The request to search for and return movies in English that were released in 2020 would be implemented as follows: `http://localhost:3000/movies/search?year=2020&language=English`
+
+More powerful search may be supported by allowing specification of operators such as the the Boolean and and or .
+
+* Example: Our movie API can require a query parameter operator with the possible values and and or to specify the Boolean operation we want to perform when searching the movie collection based on the other query parameters specified on the properties of the movie documents-- thus:
+  * to search for movies that are in English **and** were released in 2020, the request URL will be
+`http://localhost:3000/movies/search?operator=and&year=2020&language=English `, and
+  * to search for movies that are in English (regardless of the year of release) or were released in 2020 (regardless of the language), the URL  will be `http://localhost:3000/movies/search?operator=or&year=2020&language=English`
+
+### Tools for Sending Requests with Different HTTP Methods
+#### cURL
+The `curl` command can be used to send HTTP requests to test a REST API. Using `curl` on Windows can be somewhat tedious because of the need to escape quotes in JSON objects.
+
+Examples:
+
+You can see example HTTP requests, sent with methods POST, GET, PUT and DELETE, using `curl` from a MacOS or Linux shell in this [file](https://canvas.oregonstate.edu/courses/1849583/files/90981564?wrap=1)
+You can see example HTTP requests, sent with methods POST, GET, PUT and DELETE, using `curl` on WSL (Windows Subsystem for Linux) in this [file](https://canvas.oregonstate.edu/courses/1849583/files/90981565?wrap=1)
+
+### Summary
+* REST APIs are a popular architecture for implementing web services
+* Concepts:
+  * Collections and resources
+  * Particular style of URLs
+  * CRUD operations via specific HTTP methods
+  * Stateless
