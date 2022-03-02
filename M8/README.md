@@ -178,3 +178,81 @@ Some examples include...
 |500|Internal Server Error|This error code is typically a result of a coding error. For example, if our code throws an exception, and we don't catch and handle it correctly, ti can get reported as a `500` status code by the Express server.|
 |502|Bad Gateway|This error code is typically sent by the web server when it receives an invalid response from some other server, or a request it sent to another server times out. Misconfiguration can sometimes cause these errors.|
 |503|Service Unavailable|This error code is sent by the server when it is not capable of handling a request. This might happen because the server is overloaded or it is down for maintenance.|
+
+# HTTP Cookies & HTTP Sessions
+Websites overcome the statelessness of the HTTP protocol by using HTTP cookies and HTTP sessions. This allows web apps to link different requests as coming from the same user.
+
+## HTTP Cookies
+* Also called **browser cookie, web cookie, or just cookie**
+* Small piece of data created by a web server and sent to the user's web browser for storage
+* The browser can send this HTTP cookie in later requests to this web server thus identifying who this request is coming from
+* By linking together multiple requests from the same user, HTTP cookies allow web apps to overcome the stateless nature of the HTTP protocol
+
+### Headers for Cookies
+Cookies are name-value pairs.
+* When the server wants the client to store a cookie, the server sends the cookie in the response header `Set-Cookie` containing the name-value pair for the cookie
+* When a client wants to send cookies to a server, it sends them in the request header `Cookie` as name-value pairs
+  * A request can contain multiple `Cookie` headers, one for each cookie the client is sending to the server
+
+### Examining Cookies
+To examine the cookies being sent in HTTP requests and HTTP responses, we can use the “Developer Tools” in our browser. One way to examine the cookies is by viewing the request and response for the headers `Cookie` and `Set-Cookie`. Browsers, such as Chrome, also provide tabs for viewing just the cookies. For example, in Chrome:
+
+* Open the “Developer Tools” using “Control-Shift-I” or by using the browser menu
+* Go to the tab “Network”, click on a request and then in the detailed panel, click on “Cookies”
+* Both the request and the response cookies will be shown
+* Request and response cookies when visiting the URL https://eecs.oregonstate.edu/ displayed by the Chrome web browser’s Developer Tools
+  * Note that the cookies displayed to you might be different based your user preferences and prior history of visiting this website
+
+### Cookies and Express
+* We need to include the [cookie-parser middleware](http://expressjs.com/en/resources/middleware/cookie-parser.html) to use cookies in our Express app
+* First install the package with `npm install cookie-parser`
+* Import the package and use it, e.g., with the following statements
+```JavaScript
+import cookieParser from 'cookie-parser';
+app.use(cookieParser());
+```
+We can then set, delete, and get cookies as follows:
+#### **Setting a cookie**
+* Call the method [cookie on the response object](http://expressjs.com/en/4x/api.html#res.cookie)
+  * `res.cookie('language', 'English')` will set a cookie with the name `language` and value `English` on the response object
+  * An additional param can be used, `options`, which is a JSON object to set certain properties on the cookie
+  * Some important `options`:
+    * `maxAge`: Specifies the time in milliseconds the client should keep the cookie before deleting it. Cookie will be deleted/destroyed on browser close **by default**
+    * `path`: The path this cookie applies to
+    * `secure`: `true` specifies this cookie will only be sent over a secure connection (HTTPS)
+    * `signed`: `true` specifies that cookie should be signed
+
+#### **Deleting a Cookie**
+* Call the method [clearCookie on the response object](http://expressjs.com/en/4x/api.html#res.clearCookie)
+  * `res.clearCookie('language')` will delete the cookie named `language`
+
+#### **Getting the value of a cookie**
+* We can get the value of a cookie sent from the client from the property [cookies](http://expressjs.com/en/4x/api.html#req.cookies) of the request object
+* The property is of type object and a cookie, if send in the request, will be available with a property with the name of that cookie
+* `req.cookies.language` will give the value of the cookie named `language` if that cookie was sent by the client
+  * Otherwise we will get a value of `undefined`
+
+### Signed Cookies
+* Cookies are stored on the machine where the browser is installed
+* The user has access to these and can modify their values
+* To prevent tampering, we can use **signed cookies**
+* If a cookie value has been tampered with, the `cookie-parser` will recognize this and the server will reject the value of the cookie
+* To use signed cookies, we need to provide a **secret** to the **cookie parser middleware**
+* The cookie parser middleware will then use this secret to sign the cookie
+
+``` JavaScript
+import cookieParser from 'cookie-parser`;
+app.use(cookieParser('sOme4rAnDom$tringCangohere'));
+```
+
+#### **Setting a Signed Cookie**
+* Once the cookie parser has been setup with a secret, we can create signed cookies by passing the option `{signed: true}` when setting the cookie:
+``` JavaScript
+res.cookie('favorite_icecream', 'mintChocolateChip', {signed: true});
+```
+
+#### **Getting a Signed Cookie**
+* We can obtain signed cookies, by using the property `signedCookies` on the request object
+``` JavaScript
+const favoriteIcecream = req.signedCookies.favorite_icecream;
+```
