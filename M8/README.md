@@ -570,3 +570,200 @@ You can see example HTTP requests, sent with methods POST, GET, PUT and DELETE, 
   * Particular style of URLs
   * CRUD operations via specific HTTP methods
   * Stateless
+
+
+# Implementing REST APIs Using Express
+## Middleware
+* REST APIs typically use the MIME type JSON
+* Include the `express.json` middleware by adding the line `app.use(express.json())` __before__ the route handlers
+
+## Create Using POST
+1. Request
+   1. The client requests creation of a resource by sending a request with the HTTP method `POST`
+   2. The body of the request contains a JSON object with the properties of the new resource
+2. Defining the route
+   1. The route is defined using the Express method `app.post`
+   2. The route handler gets the properties of the resource to be created from `req.body`
+   3. The route handler calls the relevant method in the model layer to create the resource
+   4. The model layer returns a promise that resolves to the newly created resource, including the unique ID of this resource
+3. Response
+   1. The response includes the newly created resource with all its properties including the unique ID
+   2. **The status code is 201**
+
+### Example: Create Using POST
+> The route handler gets the values of the properties `title`, `year`, and `language` in the JSON object sent in the body of the request
+> It calls the method `movies.createMovie()` in the model layer to create a new movie
+> In the response, it sends the JSON object returned by `movies.createMovie()` and sets the status code to **201**
+
+```JavaScript
+app.post('/movies', (req, res) => {
+    movies.createMovie(req.body.title, req.body.year, req.body.language)
+        .then(movie => {
+            res.status(201).json(movie);
+        })
+        .catch(error => {
+            console.error(error);
+            // In case of an error, send back status code 400 in case of an error.
+            // A better approach will be to examine the error and send an
+            // error status code corresponding to the error.
+            res.status(400).json({ Error: 'Request failed' });
+        });
+});
+```
+
+## Read Using GET
+Consider the following cases:
+1. Reading a single resource by its unique ID
+2. Reading the whole collection
+3. Reading a subset of the collection based on some criteria
+
+> All these cases use the `GET` HTTP method
+
+### Case 1: Reading a Single Resource by Its Unique ID
+1. Request
+   1. To read a specific resource, the client sends a request with the HTTP method `GET`
+   2. The URL includes the ID of the resource, e.g., `http://localhost:3000/movies/60cfa8df411c4d66e8abcdbd`
+2. Defining this route
+   1. The route is defined using the Express method `app.get`
+   2. The route handler gets the ID of the resource from `req.params`
+   3. The route handler calls the relevant method in the model layer to find the resource by ID
+   4. The model layer returns a promise that resolves to the resource if the resource is found
+      1. Otherwise, the promise resolves to `null`
+3. Response
+   1. If the resource is found, it is sent in the body as JSON with the status code **200**
+   2. If the resource is not found, the status code is **404**
+
+### Example: Read Using Get
+> Here is the route handler for `GET ` requests to the URL `/movies/:_id` in our example REST API
+* The route handler gets the values of the path parameter `_id` from the request URL
+* It calls the method `movies.findMovieById()` in the model layer to get the movie with this ID value
+* In the response, it sends the JSON object returned by `movies.findMovieById()`
+* If the model returns `null`, then the response is sent with the status code **404**
+
+``` JavaScript
+app.get('/movies/:_id', (req, res) => {
+    const movieId = req.params._id;
+    movies.findMovieById(movieId)
+        .then(movie => { 
+            if (movie !== null) {
+                res.json(movie);
+            } else {
+                res.status(404).json({ Error: 'Resource not found' });
+            }         
+         })
+        .catch(error => {
+            res.status(400).json({ Error: 'Request failed' });
+        });
+
+});
+```
+
+### Case 2 & 3: Reading the Collection or Reading a Subset of the Collection
+* To read the whole collection, the URL will have just the name of the collection without an ID
+* To read a subset of the collection based on some criteria, these criteria can be specified as query parameters to the collection URL
+
+### Example: Reading the Collection or Reading a Subset of the Collection
+> Here is the route handler for `GET` requests to the URL `/movies` in our example REST API
+* This route handler can return either the whole collection or return just the movies for the year provided in the request URL as a query parameter
+* The route handler looks to see if the query parameters include a parameter with the name `year`
+  * If the parameter is found, the route handler creates a filter on the property `year` and the value from the query parameter
+  * If this parameter is not found, the route handler creates an empty filter which is equivalent to not specifying any filter
+* It calls the method `movies.findMovies()` in the model layer to query the collection
+* In the response, it sends the JSON object returned by `movies.findMovies()`
+
+``` JavaScript
+app.get('/movies', (req, res) => {
+    let filter = {};
+    // Is there a query parameter named year? If so add a filter based on its value.
+    if(req.query.year !== undefined){
+        filter = { year: req.query.year };
+    }
+    movies.findMovies(filter, '', 0)
+        .then(movies => {
+            res.send(movies);
+        })
+        .catch(error => {
+            console.error(error);
+            res.send({ Error: 'Request failed' });
+        });
+
+});
+```
+
+## Update Using PUT
+1. Request
+   1. To update a resource, the client sends a request with the HTTP method `PUT`
+   2. The URL includes the ID of the resource, e.g., `http://localhost:3000/movies/60cfa8df411c4d66e8abcdbd`
+   3. The body of the request contains a JSON object with all the non-ID properties to set on the resource
+2. Defining the route
+   1. The route is defined using the Express method `app.put`
+   2. The route handler gets the ID of the resource from `req.params`
+   3. The route handler gets the properties of the resource to be updated from the `req.body`
+   4. The route handler calls the relevant method in the model layer to update the resource
+   5. The model layer returns a promise that resolves to the number of documents that were updated
+      1. If a resource with the specified ID exists, then this value is **1**, otherwise the value is **0**
+3. Response
+   1. If the resource is found, and updated, it is sent in the body as JSON with the status code **200**
+   2. If the resource is not found, the status code is **404** 
+
+### Example: Update Using PUT
+> Here is the route handler for `PUT` requests to the URL `/movies/:_id` in our example REST API
+
+* This route handler gets the values of the path parameter `_id` from the request URL
+* The route handler gets the values of the properties `title`, `year`, and `language` from the JSON object sent in the body of the request
+* It calls the method `movies.replaceMovie()` in the model layer to update the movie
+* In the response, it sends the JSON object returned by `movies.replaceMovie()`
+
+``` JavaScript
+app.put('/movies/:_id', (req, res) => {
+    movies.replaceMovie(req.params._id, req.body.title, req.body.year, req.body.language)
+        .then(numUpdated => {
+            if (numUpdated === 1) {
+                res.json({ _id: req.params._id, title: req.body.title, year: req.body.year, language: req.body.language })
+            } else {
+                res.status(404).json({ Error: 'Resource not found' });
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(400).json({ Error: 'Request failed' });
+        });
+});
+```
+
+## Delete Using DELETE
+1. Request
+   1. To delete a resource, the client sends a request with the HTTP method `DELETE`
+   2. The URL includes the ID of the resource to delete, e.g., `http://localhost:3000/movies/60cfa8df411c4d66e8abcdbd`
+2. Defining the route
+   1. The route is defined using the Express method `app.delete`
+   2. The route handler gets the ID of the resource from `req.params`
+   3. The route handler calls the relevant method in the model layer to delete the resource
+   4. The method in the model layer returns a promise that resolves to the count of deleted resources
+      1. This value is **1** if a resource with the given ID existed, otherwise **0**
+3. Response
+   1. If the resource was found and deleted, the response status code is **204**, indicating it was deleted successfully
+   2. If the resource was not found, the response status code is **404**
+
+### Example: Delete Using DELETE
+> Here is the route handler for `DELETE` requests to the URL `/movies/:_id` in our example REST API
+* This route handler gets the values of the path parameter `_id` from the request URL
+* It calls the method `movies.deleteById()` in the model layer to update this movie
+* In the response, it sends either status code **204** if a resource was deleted by the call to `movies.deleteById()` or status code **404** if the resource was not found
+
+``` JavaScript
+app.delete('/movies/:_id', (req, res) => {
+    movies.deleteById(req.params._id)
+        .then(deletedCount => {
+            if (deletedCount === 1) {
+                res.status(204).send();
+            } else {
+                res.status(404).json({ Error: 'Resource not found' });
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            res.send({ error: 'Request failed' });
+        });
+});
+```
