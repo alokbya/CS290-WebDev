@@ -149,6 +149,100 @@ function ContactPage() {
 }
 export default ContactPage;
 ```
-
 # Implementing a Full-Stack MERN App - Part 1
 > This section focuses on building out the application in E9, [movies-ui](./movies-ui/).
+
+1. Home Page
+   1. When this page is first rendered, it displays all the movies currently stored in our MongoDB movie collection. **This is done by calling the REST API endpoint to get all the movies**
+   2. Each movie is displayed with icons to delete or edit the movie
+   3. Clicking on the icon for deleting the movie deletes the movie from the database. **This is done by calling the REST API endpoint to delete the movie**
+   4. Clicking on the icon for editing the movie takes us to the Edit Movie page. The data for the selected movie is displayed in a form that is automatically filled in with this data
+   5. This page has a link to the Add Movie Page
+2. Add Movie Page
+   1. This page provides controls to input data for a new movie. The controls allow the user to specify the new movie's title, year, and language
+   2. Clicking on an 'Add' button adds the movie to the database. This is done by calling the REST API endpoint to create a movie
+   3. After adding the movie, the user is automatically taken back to the Home Page
+3. Edit Movie Page:
+   1. This page has a form with controls to edit the data for a movie
+   2. The form is automatically filled-in when the page is loaded
+   3. Clicking on 'Save' button updates the movie in the database **This is done by calling a REST API endpoint to update a movie.**
+   4. After saving the movie **the user is automatically taken to the home page.
+
+``` Bash
+App
+---
+    -> HomePage
+        -> Movie List
+            -> Movie
+            -> Movie
+            -> Movie...
+    -> Add Movie Page
+    -> Edit Movie Page
+```
+
+> Note, the MovieList component will have one child Movie component for each movie in the list of movies
+
+* The `App` component has 3 child components: `HomePage`, `AddMoviePage`, and `EditMoviePage`
+* The `HomePage` component has one child component, the `MovieList` component
+* The `MovieList` component has `Movie` components as its children
+* There will be one `Movie` component corresponding to each movie displayed in the HTML table. That `Movie` component will generate the HTML content for the corresponding row in the HTML table
+
+## Using the React App's Development Build
+> When we create a React app using `create-react-app` and run it using `npm start`, the app prints some messages to the command window after starting up
+
+When creating the `movies-ui` app, the following will display in the console...
+``` Bash
+Compiled successfully!
+  
+You can now view movies-ui in the browser.
+  
+http://localhost:3000
+  
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+```
+
+* This is a **development** build
+* Create-React-App (CRA) has a built-in Express web server for running a development build
+* Since we implemented an SPA, the browser sends a requeset to this Express web server **only once** to load all the content for the React app
+* After the initial loading, the browser doesn't make any requests to this Express web server
+* For a full-stack MERN app, the React app in the web browser should now only make HTTP requests to the REST API server
+
+## Simultaneously Running the React App Express Server and the REST API Express Server
+* Make sure each is using different ports!
+* Start Express server for the REST API on port `3000`
+* In the React app, create a file named `.env`
+  * This file should be in the same directory as the file `package.json`
+* In this file add a line to specify the prot number on which the React app server should run
+  * i.e., add line `PORT=8000` so the React app will run on port `8000`
+
+Now we can run both the back, and front-end!
+
+## Sending HTTP Requests from the React App to the REST API
+* We need to [add a proxy property](https://create-react-app.dev/docs/proxying-api-requests-in-development/) at the top level of `package.json` of the React app to call the Express REST API (running on `localhost:3000`) from the React App (running on `localhost:8000`)
+```
+"proxy": http://localhost:3000,
+```
+
+## `fetch` API
+> The `fetch` API allows JavaScript code running in browsers to make HTTP requests. 
+
+The API consists of one method, [fetch()](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) which takes up to two parameters as follows:
+
+1. `resource` 
+   1. This is a required parameter specifying the resource for which the HTTP request will be made
+   2. The value of this parameter can be a string specifying the URL or it can be a [request object](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request). In our examples we will only use URLs.
+   3. If the URL specified as a `resource` is a relative URL, then the HTTP request will be sent to the same server from which the file containing the code was downloaded.
+2. `init`
+   1. This is an optional parameter. If specified its value must be a JavaScript object specifying options that can configure various aspects of the request
+   2. The complete list of options that can be specified in this object is available in the API doc. Here we highlight the options that we will use
+      1. `method`
+         1. The value of this property is a string and is used to specify the request method, e.g., `get`, `post`, etc.
+      2. `headers`
+         1. The value of this property is a JS object with headers specified as key-value paris
+      3. `body`
+         1. The value of this property is a string which corresponds to the body of the HTTP request
+
+> The `fetch()` method returns a promise which resolves to a [response object](https://developer.mozilla.org/en-US/docs/Web/API/Response). Note, this `response` object is not the same as the Express response object. The `fetch` API is available in the browser and is completely independent of Express, which runs in the server.
+
+## CRUD Operations from the React APP: Calling Get /movies to Display Movies on the Home Page
