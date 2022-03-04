@@ -151,4 +151,4 @@ export default ContactPage;
 ```
 
 # Implementing a Full-Stack MERN App - Part 1
-> This section focuses on building out the application in E9, movies-ui.
+> This section focuses on building out the application in E9, [movies-ui](./movies-ui/).
