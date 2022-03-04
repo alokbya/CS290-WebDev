@@ -152,3 +152,26 @@ export default ContactPage;
 
 # Implementing a Full-Stack MERN App - Part 1
 > This section focuses on building out the application in E9, movies-ui.
+
+## `fetch` API
+> The `fetch` API allows JavaScript code running in browsers to make HTTP requests. 
+
+The API consists of one method, [fetch()](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) which takes up to two parameters as follows:
+
+1. `resource` 
+   1. This is a required parameter specifying the resource for which the HTTP request will be made
+   2. The value of this parameter can be a string specifying the URL or it can be a [request object](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request). In our examples we will only use URLs.
+   3. If the URL specified as a `resource` is a relative URL, then the HTTP request will be sent to the same server from which the file containing the code was downloaded.
+2. `init`
+   1. This is an optional parameter. If specified its value must be a JavaScript object specifying options that can configure various aspects of the request
+   2. The complete list of options that can be specified in this object is available in the API doc. Here we highlight the options that we will use
+      1. `method`
+         1. The value of this property is a string and is used to specify the request method, e.g., `get`, `post`, etc.
+      2. `headers`
+         1. The value of this property is a JS object with headers specified as key-value paris
+      3. `body`
+         1. The value of this property is a string which corresponds to the body of the HTTP request
+
+> The `fetch()` method returns a promise which resolves to a [response object](https://developer.mozilla.org/en-US/docs/Web/API/Response). Note, this `response` object is not the same as the Express response object. The `fetch` API is available in the browser and is completely independent of Express, which runs in the server.
+
+## CRUD Operations from the React APP: Calling Get /movies to Display Movies on the Home Page
