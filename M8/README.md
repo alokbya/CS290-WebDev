@@ -848,3 +848,74 @@ export default CounterPage;
 
 ### Using deps to Control useEffect
 > If we specify the parameter `deps` to `useEffects`, then React will call the function `effect` only when any of the values in the array passed to `deps` changes
+
+#### Example: Passing a Variable in `deps`
+> In our example, if we pass the array `[count]` to `useEffect`, then React will call `effect` only when the value of `count` changes
+
+``` JavaScript
+usesEffect(() => {
+  console.log('effect function called';)
+}, [count])
+```
+Specifying this parameter does not change the behavior much in this example because there is only one state variable. However, if there were multiple state variables, then we could pass only one of the variables to a useEffect hook and then the effect function would be called only when that variable changes, but not when any of the other variables change.
+
+#### Example: Passing an Empty Array
+* If we pass an empty array as the second parameter to `useEffect`, the `effect` function is called only on the initial render
+* This means that the `effect` function will be called during the **mounting** stage, but never again during the lifecycle of the component
+* This is an ideal use case for fetching data from a server during the initial rendering of a component
+
+``` JavaScript
+useEffect(() => {
+  console.log('effect function called');
+}, []);
+```
+
+### `useHistory` Hook
+> In our examples, we using version 5 of `react-router-dom`. In version 6 of `react-router-dom` , the `useHistory` hook has been [replaced](https://reactrouter.com/docs/en/v6/upgrading/v5#use-usenavigate-instead-of-usehistory) by the `useNavigate` hook.
+* The `useHistory` hook helps us to navigate between pages without requiring the user to click on a link
+* To use this hook, we need to import it from the `react-router-dom` library
+* We call the method `push` on this hook to specify the URL we want to navigate to
+
+### Example: `useHistory` Hook
+Consider a SPA with two pages:
+1. Home Page
+   1. This page has links to the Contact Page
+2. Contact Page
+   1. This pages has a form which asks the user to enter their name and has a "Submit" button
+   2. When the user hits the "Submit" button, we want to display an alert and then automatically take the user back to the Home Page
+  
+We can implement the required functionality by importing the `useHistory` hook in the Contact Page. Then at the point we want to navigate to the Home Page, we call the method `history` on this hook and pass it the path `/`.
+
+See Contact Page here...
+``` JavaScript
+import React, { useState } from 'react';
+import { useHistory } from "react-router-dom";
+
+function ContactPage() {
+    const [name, setName] = useState('');
+    const history = useHistory();
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+        alert(`Hello ${name}! Let's go to the Home Page`);
+        history.push("/");
+    };
+
+    return (
+        <>
+            <h1>Contact Page</h1>
+            <form>
+                <fieldset>
+                    <legend>Your Details</legend>
+                    <label>Please enter your name
+                        <input type="text" value={name}
+                            onChange={e => setName(e.target.value)} />
+                    </label>
+                </fieldset>
+                <button type="submit" onClick={submitHandler}>Submit</button>
+            </form>
+        </>
+    );
+}
+export default ContactPage;
+```
