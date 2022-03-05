@@ -245,4 +245,104 @@ The API consists of one method, [fetch()](https://developer.mozilla.org/en-US/do
 
 > The `fetch()` method returns a promise which resolves to a [response object](https://developer.mozilla.org/en-US/docs/Web/API/Response). Note, this `response` object is not the same as the Express response object. The `fetch` API is available in the browser and is completely independent of Express, which runs in the server.
 
-## CRUD Operations from the React APP: Calling Get /movies to Display Movies on the Home Page
+## CRUD Operations from the React APP: Calling GET /movies to Display Movies on the Home Page
+When a user goes to the Home Page of the React app, we want to display all the movies. We achieve this as follows...
+* We implement a function `loadMovies()` which uses the `fetch()` method to send a request to the `GET /movies` endpoint in the REST API
+* We call the function `loadMovies()` during the mounting of the Home Page (`useEffect()` hook)
+
+``` JavaScript
+const [movies, setMovies] = useState([]);
+	
+const loadMovies = async () => {
+    const response = await fetch('/movies');
+    const movies = await response.json();
+    setMovies(movies);
+}
+	
+useEffect(() => {
+    loadMovies();
+}, []);
+```
+
+* The `useEffect` hook calls the function `loadMovies()`
+* The second parameter to `useEffect` is an empty array
+  * This means that the `useEffect` hook will only be called when the component is being mounted
+* In `loadMovies()` we use the `fetch` API to call the endpoint `/movies`
+  * Since we do not specify an HTTP method in the call to `fetch`, the default HTTP method `GET` is used
+* `loadMovies()` sets the value of the state variable `movies` to the body of the HTTP response
+* Since a state variable has been updated, the component goes into the Updating stage, the `render()` method of the component is called and the list of movies is rendered on the page
+
+### Why do we define a separate `loadMovies()` function?
+In our code, the anonymous function being passed as the effect parameter of the `useEffect` hook simply calls the function `loadMovies`.
+
+* It might seem that instead of defining the function `loadMovies` function, we could simply have added the code for this function in the anonymous function.
+* But we cannot do that. The reason is that an asynchronous function cannot be passed as a parameter to `useEffect`.
+* However, the function passed to `useEffect` is allowed to call an asynchronous function.
+* This is why we need to define the function `loadMovies` instead of putting its code directly in the function passed to `useEffect`.
+
+## CRUD Operations from the React App: Calling DELETE /movies to Delete a Movie on the Home Page
+To delete a move, the function `onDeleteMovie()` is called when a user clicks the delete icon displayed next to a movie. This function sends an HTTP request to the endpoint `DELETE /movies` of the REST API.
+
+``` JavaScript
+const onDelete = async id => {
+    const response = await fetch(`/movies/${id}`, { method: 'DELETE' });
+    if (response.status === 204) {
+	const getResponse = await fetch('/movies');
+	const movies = await getResponse.json();
+	setMovies(movies);
+    } else {
+	console.error(`Failed to delete movie with id = ${id}, status code = ${response.status}`)
+    }
+}
+```
+> Note that when calling `fetch()`, we pass it a second argument to set the HTTP method to `DELETE`. We also pass the `id` of the movie as a path parameter in the request URL.
+
+## CRUD Operations from the React App: Calling CREATE /movies to Create a Movie on the Add Movie Page
+To create a movie, we implement the function `addMovie()` which makes an HTTP request to the endpoint `POST /movies` of the REST API. This function is called from the Add Movie Page when a user clicks 'Add' on this page. Here is the code for this function.
+``` JavaScript
+  const addMovie = async () => {
+      const newMovie = { title, year, language };
+      const response = await fetch('/movies', {
+          method: 'POST',
+          body: JSON.stringify(newMovie),
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      });
+      if(response.status === 201){
+          alert("Successfully added the movie!");
+      } else {
+          alert(`Failed to add movie, status code = ${response.status}`);
+      }
+      history.push("/");
+  };
+```
+In this function we call `fetch` with two parameters using the second parameter to configure the request as follows:
+* We set the value of the property `method` to `POST`
+* The `POST /movies` endpoint which requires the request to send the data for the movie in the request body as JSON
+* Sending JSON using `fetch()` requires setting the property `body` to a string representation of the JavaScript object we want to send
+  * We call `JSON.stringify()` to convert the JavaScript object `movie` to a string
+* We set the `Content-Type` header to `application/json` to indicate that the body is in JSON format
+
+## CRUD Operations from the React App: Calling UPDATE /movies to Update a Movie on the Edit Movie Page
+To update a movie, we implement the function `editMovie()` which makes an HTTP request to the endpoint `PUT /movies` of the REST API. We call this function from the Edit Movie Page when a user clicks 'Save' on this page. Here is the code for this function:
+
+``` JavaScript
+const editMovie = async () => {
+    const response = await fetch(`/movies/${movieToEdit._id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ title: title, year: year, language: language }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    if(response.status === 200){
+         alert("Successfully edited the movie!");
+    } else {
+         alert(`Failed to edit movie, status code = ${response.status}`);
+    }     history.push("/");
+};
+```
+Other than the value of the property `method` being different, calling `fetch` to send an HTTP request to the endpoint `PUT /movies` is similar to calling `fetch` to send an HTTP request to the endpoint `POST /movies`
+
+## Sharing State Between Components
