@@ -346,3 +346,163 @@ const editMovie = async () => {
 Other than the value of the property `method` being different, calling `fetch` to send an HTTP request to the endpoint `PUT /movies` is similar to calling `fetch` to send an HTTP request to the endpoint `POST /movies`
 
 ## Sharing State Between Components
+> In React apps, data can be easily passed down from a parent component to a child component.
+
+* This mechanism is built into React because when instantiating a child component, the parent component can pass data by setting the attribute of the child component.
+* Data can then flow along the React component tree from a node to any of its descendant nodes.
+* This is called "top-down", or "unidirectional" data flow
+* When multiple components need to share state this top-down flow of data means that **__we have to carefully consider where in the React component tree we should define state__**
+
+## Passing the movie object to the Edit Movie Page
+* The Edit Movie page must have access to the movie `_id`
+* This `_id` value is required to make the REST API call to the update endpoint `PUT /movies/:_id`
+* For a better user experience, we also want to pre-fill the form on the Edit Movie Page with data of the movie that the user is editing
+* We can do this by setting the initial values of the state variables on the component `EditMoviePage` to the corresponding properties of the movie being edited
+
+However, this poses the following problem...
+* A user chooses the movie to edit by clicking on an icon defined in the component `Movie`
+* We want to pass the object for this movie to the component `EditMoviePage`
+* The built-in React mechanisms only provide us the ability to pass data from a component to its descendant components
+* But the components `Movie` and `EditMoviePage` are not in an ancestor-descendant relationship
+
+## Lifting State to Common Ancestor
+The solution is to define the state to be shared in a __common ancestor of the components__. This technique is called **lifting state**.
+
+In our `movies-ui` SPA, the only common ancestor of the components `Movie` and `EditMoviePage` is the `App` component. This means we need to lift up the state to the `App` component and then send it down to the `Movie` and `EditMoviePage` components:
+
+* In the component `App`, we define a new state variable, `movieToEdit` to share between two of the child nodes
+  * The update function associated with this new state variable is called `setMovieToEdit`
+* We can pass both the variable and its update function to both the `HomePage` and the `EditMoviePage`
+* However, the `HomePage` and its child components only ever set the value of this state variable, but never read its value
+* On the other hand, the `EditMoviePage` only ever reads the value of this state variable, but never sets its value
+* Therefore, in the component `App`
+  * We pass the update function `setMovieToEdit` to the component `HomePage`
+  * We pass the state variable `movieToEdit` to the component `EditMoviePage`
+
+``` JavaScript
+import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import AddMoviePage from './pages/AddMoviePage';
+import EditMoviePage from './pages/EditMoviePage';
+
+import { useState } from 'react';
+
+function App() {
+  const [movieToEdit, setMovieToEdit] = useState([]);
+  return (
+    <div className="App">
+      <Router>
+        <div className="App-header">
+          <Route path="/" exact>
+            <HomePage setMovieToEdit={setMovieToEdit} />
+          </Route>
+          <Route path="/add-movie">
+            <AddMoviePage />
+          </Route>
+          <Route path="/edit-movie">
+            <EditMoviePage movie={movieToEdit} />
+          </Route>
+        </div>
+      </Router>
+    </div>
+  );
+}
+
+export default App;
+```
+
+When the user clicks on the **Edit** icon on the **Home Page**
+* We want a function `onEdit()` defined on the component `HomePage` to be called
+* This function
+  * Calls `setMovieToEdit()` to update the state variable `movieToEdit` and set its value to the movie being edited
+  * Then uses the `useHistory` hook to automatically display the Edit Movie Page
+* This function needs to be called when the user clicks on the **Edit** icon in the component `Movie`
+* This is achieved by passing the function `onEdit()` all the way down the component tree to each `Movie` component
+* In the component `Movie` this function is set as the event handler for clicks on the Edit icon
+
+Here is the relevant code for `HomePage.js`...
+
+``` JavaScript
+function HomePage({ setMovieToEdit }) {
+    const history = useHistory();
+    const [movies, setMovies] = useState([]);
+
+    const onDelete = async id => {
+        ...
+    }
+
+    const onEdit = async movieToEdit => {
+        setMovieToEdit(movieToEdit);
+        history.push("/edit-movie");
+    }
+
+    const loadMovies = async () => {
+        ...
+    }
+
+    useEffect(() => {
+        loadMovies();
+    }, []);
+
+    return (
+        <>
+            <h2>List of Movies</h2>
+            <MovieList movies={movies} 
+                    onDelete={onDelete}
+                    onEdit={onEdit}>
+            </MovieList>
+            <Link to="/add-movie">Add a movie</Link>
+        </>
+    );
+}
+
+export default HomePage;
+```
+
+The component `EditMoviePage`
+* Receives `movieToEdit` as an argument
+* It initializes the values of the state variables `title`, `year`, and `language` using the properties of `movieToEdit`
+* It uses the value of `movieToEdit._id` to construct the pat passes as an argument to the function `fetch`
+
+Here is the relevant code for `EditMoviePage.js`...
+``` JavaScript
+import React, { useState } from 'react';
+import { useHistory } from "react-router-dom";
+
+export const EditMoviePage = ({ movieToEdit }) => {
+    const [title, setTitle] = useState(movieToEdit.title);
+    const [year, setYear] = useState(movieToEdit.year);
+    const [language, setLanguage] = useState(movieToEdit.language);
+    ... 
+
+   const editMovie = async () => { 
+      await fetch(`/movies/${movieToEdit._id}`, {         
+        ...
+    };
+
+    return (
+        <div>
+            <h1>Edit Movie</h1>
+            <input
+                type="text"
+                value={title}
+                onChange={e => setTitle(e.target.value)} />
+            <input
+                type="number"
+                value={year}
+                onChange={e => setYear(e.target.value)} />
+            <input
+                type="text"
+                value={language}
+                onChange={e => setLanguage(e.target.value)} />
+            <button
+                onClick={editMovie}
+            >Save</button>
+        </div>
+    );
+}
+
+export default EditMoviePage;
+```
