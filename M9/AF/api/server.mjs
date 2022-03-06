@@ -8,52 +8,119 @@
 // - requests have valid data
 // - response code must be 500 in case of error, response body must have JSON object with information about the error (exception info)
 // - send 404 instead of 500 if delete throws exception
-
+import * as exercises from './model.mjs';
 import express from 'express';
 const app = express();
 const PORT = 3000;
 
-// Middleware
+// MIDDLEWARE
+
+/*
+    * Parse requests into JSON
+*/
+app.use(express.json()) 
+
+
 // Validate session id for authentication
 
 
-// Controller
+// CONTROLLER
 
 /*
     * Create
 */
 app.post("/exercises", (req, res) => {
-    // create exercise in db
+    console.log(req.body);
+    exercises.addExercise(
+        req.body.name,
+        req.body.reps,
+        req.body.weight,
+        req.body.unit === "kg" ? "kg" : "lbs",
+        req.body.date)
+        .then(exercise => {
+            res.status(201).json(exercise)
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).json({Error: `${error}`});
+        });
 });
 
 /*
     * Read all
 */
 app.get("/exercises", (req, res) => {
-    // read all exercises in db
+    const filter = {};
+    exercises.getExercise(filter, '', 0)
+        .then(exercise => {
+            if(exercise !== null) {
+                res.status(200).json(exercise);
+            } else {
+                res.status(404).json({Error : `Document not found: ${error}`})
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).json({Error: `${error}`});
+        });
 });
 
 /*
     * Read by id
 */
 app.get("/exercises/:id", (req, res) => {
-    // read single exercise by id
+    const filter = {_id: req.params.id};
+    exercises.getExercise(filter, '', 0)
+        .then(exercise => {
+            if(exercise !== null && exercise.length > 0) {
+                res.status(200).json(exercise);
+            } else {
+                res.status(404).json({Error : "Document not found"})
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).json({Error: `${error}`});
+        });
 });
 
 /*
     * Update by id
 */
-app.get("/exercises/:id", (req, res) => {
+app.put("/exercises/:id", (req, res) => {
     // update by id
+    exercises.updateExercise({_id: req.params.id}, req.body, {new: true})
+        .then(exercise => {
+            if(exercise.modifiedCount > 0) {
+                res.status(200).json(exercise)
+            } else {
+                res.status(404).json({Error: "Document not found"});
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).json({Error: `${error}`});
+        })
+
 });
 
 /*
     * Delete by id
 */
 app.delete("/exercises/:id", (req, res) => {
-    // delete by id
+    exercises.deleteExerciseById({_id: req.params.id})
+        .then(exercise => {
+            if(exercise.deletedCount > 0) {
+                res.status(204).json(exercise);
+            } else {
+                res.status(404).json({Error: "Document not found"});
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).json({Error: `${error}`});
+        });
 });
-
 
 /*
     * Listen for incoming requests on PORT
