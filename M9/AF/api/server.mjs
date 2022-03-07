@@ -30,7 +30,6 @@ app.use(express.json())
     * Create
 */
 app.post("/exercises", (req, res) => {
-    console.log(req.body);
     exercises.addExercise(
         req.body.name,
         req.body.reps,
@@ -89,10 +88,12 @@ app.get("/exercises/:id", (req, res) => {
 */
 app.put("/exercises/:id", (req, res) => {
     // update by id
+    console.log(req.params.id);
+    console.log(JSON.stringify(req.body));
     exercises.updateExercise({_id: req.params.id}, req.body, {new: true})
         .then(exercise => {
-            if(exercise.modifiedCount > 0) {
-                res.status(200).json(exercise)
+            if(exercise !== null) {
+                res.status(200).json({ modifiedCount: 1 });
             } else {
                 res.status(404).json({Error: "Document not found"});
             }
