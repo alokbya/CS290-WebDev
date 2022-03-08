@@ -20,6 +20,23 @@ Another alternative to paying for the use of MongoDB is provided by the three bi
 ## MongoDB
 [Here](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/) is the documentation to aide in the installation of MongoDB for OSX machines.
 
+1. Tap the [MongoDB Homebrew Tap](https://github.com/mongodb/homebrew-brew) to download the official Homebrew formula for MongoDB and the Database Tools. If you've done this for a previous version of MongoDB, skip this.
+``` Bash
+brew tap mongodb/brew
+```
+2. To install MongoDB, run the following command in your macOS Terminal
+``` Bash
+brew install mongodb-community@5.0
+```
+3. Run MongoDB Community Edition as a macOS service (mongod)
+``` Bash
+brew services start mongodb-community@5.0
+```
+4. Stop mongod service on macOS
+``` Bash
+brew services stop mongodb-community@5.0
+```
+
 ## Valuable Links?
 * The deployment of React apps created using CRA is discussed [here](https://create-react-app.dev/docs/deployment/)
 * Guide to deploying a [Node app on AWS](https://aws.amazon.com/getting-started/hands-on/deploy-nodejs-web-app/) using AWS’s DynamoDB DBMS.
