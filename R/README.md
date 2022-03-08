@@ -17,6 +17,8 @@ One alternative to paying the cloud vendor for the use of MongoDB is to run the 
 
 Another alternative to paying for the use of MongoDB is provided by the three biggest cloud vendors, AWS, Azure and GCP. These vendors have their own document-oriented DBMS and the use of that DBMS is likely to be included in the free trial offer. The vendors provide Node packages similar to Mongoose to connect to their own DBMS product to an app written with Node. A well-written app, with a clean separation between the Model, View and Controller layers, should not require a large code change to switch to a different document-oriented DBMS. The change will mostly be in the Model layer, with some possible changes in the interface between the Controller and the Model. In particular, the View, i.e., the React app, should not be impacted at all due because the React app communicates with the REST API whose specification should not change when the DBMS is changed.
 
+## MongoDB
+[Here](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/) is the documentation to aide in the installation of MongoDB for OSX machines.
 
 ## Valuable Links?
 * The deployment of React apps created using CRA is discussed [here](https://create-react-app.dev/docs/deployment/)
