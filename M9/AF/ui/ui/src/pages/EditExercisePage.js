@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { useHistory } from 'react-router-dom';
 
 function EditExercisePage({exercise}) {
     
@@ -8,18 +9,24 @@ function EditExercisePage({exercise}) {
     const [unit, setUnit] = useState(exercise.unit);
     const [date, setDate] = useState(exercise.date);
     
+    const history = useHistory();
+
     const editExercise = async (exercise) => {
         
         const updatedExercise = { name, reps, weight, unit, date };
         const response = await fetch(`/exercises/${exercise._id}`, {
             method: 'PUT',
             body: JSON.stringify(updatedExercise),
+            headers: {
+                'Content-Type': 'application/json',
+            },
         });
         if (response.status === 200) {
             alert('Successfully edited exercise!');
         } else {
             alert(`Failed to edit exercise, status code = ${response.status}`);
         }
+        history.push('/');
     }
 
     return (
@@ -62,7 +69,7 @@ function EditExercisePage({exercise}) {
                 value={date}
                 onChange={e => setDate(e.target.value)}
             />
-            <button id="submit-exercise" onClick={editExercise}>Add</button>
+            <button id="submit-exercise" onClick={() => editExercise(exercise)}>Add</button>
         </>
     )
 }

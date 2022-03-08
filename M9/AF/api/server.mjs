@@ -1,13 +1,3 @@
-
-// Create - POST /exercises
-// Read - GET /exercises
-// Read - GET /exercises/:id
-// Delete - DELETE /exercises/:id
-
-// Assumptions
-// - requests have valid data
-// - response code must be 500 in case of error, response body must have JSON object with information about the error (exception info)
-// - send 404 instead of 500 if delete throws exception
 import * as exercises from './model.mjs';
 import express from 'express';
 const app = express();
