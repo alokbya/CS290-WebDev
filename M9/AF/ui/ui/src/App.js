@@ -18,6 +18,7 @@ function App() {
       <Router>
         <header>
         <h1>Exercise Tracker</h1>
+        <p id="description">Create, edit, and view your exercises to help you achieve your fitness goals.</p>
         </header>
         <Navigation />
         <main>

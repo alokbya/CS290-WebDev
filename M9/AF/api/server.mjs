@@ -6,6 +6,14 @@ const PORT = 3000;
 // MIDDLEWARE
 
 /*
+    * Set response content type
+*/
+app.use('/', (req, res, next) => {
+    res.contentType('application/json');
+    next();
+});
+
+/*
     * Parse requests into JSON
 */
 app.use(express.json()) 
@@ -78,12 +86,10 @@ app.get("/exercises/:id", (req, res) => {
 */
 app.put("/exercises/:id", (req, res) => {
     // update by id
-    console.log(req.params.id);
-    console.log(JSON.stringify(req.body));
     exercises.updateExercise({_id: req.params.id}, req.body, {new: true})
         .then(exercise => {
             if(exercise !== null) {
-                res.status(200).json({ modifiedCount: 1 });
+                res.status(200).json(exercise);
             } else {
                 res.status(404).json({Error: "Document not found"});
             }

@@ -14,8 +14,6 @@ function EditExercisePage({exercise}) {
     let history = useHistory();
 
     const editExercise = async () => {
-
-        
         const updatedExercise = { name, reps, weight, unit, date };
         const response = await fetch(`/exercises/${exercise._id}`, {
             method: 'PUT',

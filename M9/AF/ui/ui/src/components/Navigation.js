@@ -6,7 +6,7 @@ function Navigation() {
         <>
             <nav>
                 <Link id="home-link" class="nav-item" to='/' exact>Home</Link>
-                <Link to="/create-exercise">Add an exercise</Link>
+                <Link to="/create-exercise">Create Exercise</Link>
                 {/* <Link id="create-link" class="nav-item" to='/create-exercise'>Create Exercise</Link> */}
                 {/* <Link to='/edit-exercise'>Edit Exercise</Link> */}
             </nav>

@@ -49,7 +49,6 @@ function ExerciseForm({name, setName,
                     value={date}
                     onChange={e => setDate(e.target.value)}
                 />
-                {/* <button id="submit-exercise" onClick={processExercise(exercise)}>Add</button> */}
             </section>
         </>
     );

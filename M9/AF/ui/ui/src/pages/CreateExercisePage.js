@@ -12,8 +12,7 @@ function CreateExercisePage() {
 
     let history = useHistory();
 
-    const createExercise = async (exercise) => {
-        // fetch post    
+    const createExercise = async () => {
         const newExercise = {name, reps, weight, unit, date};
         const response = await fetch('/exercises', {
             method: 'POST',
@@ -22,11 +21,11 @@ function CreateExercisePage() {
                 'Content-Type': 'application/json',
             },
         });
-        // if(response.status === 201) {
-        //     alert('Successfully added the exercise!');
-        // } else {
-        //     alert(`Failed to add movie, status code = ${response.status}`);
-        // }
+        if(response.status === 201) {
+            alert('Successfully added the exercise!');
+        } else {
+            alert(`Failed to add movie, status code = ${response.status}`);
+        }
         history.push('/');
     }
 
