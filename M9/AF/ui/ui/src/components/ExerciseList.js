@@ -5,16 +5,16 @@ function ExerciseList ({ exercises, deleteExercise, setExerciseToEdit, onEdit })
     
     return (
         <>
-            <table id="exercises">
+            <table id="exercises-table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Reps</th>
-                        <th>Weight</th>
-                        <th>Unit</th>
-                        <th>Date</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th class="reg-header name">Name</th>
+                        <th class="reg-header">Reps</th>
+                        <th class="reg-header">Weight</th>
+                        <th class="reg-header">Unit</th>
+                        <th class="reg-header date">Date</th>
+                        <th id="edit-header"></th>
+                        <th id="delete-header"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,7 +22,6 @@ function ExerciseList ({ exercises, deleteExercise, setExerciseToEdit, onEdit })
                         key={i}
                         deleteExercise={deleteExercise}
                         onEdit={onEdit} />)}
-                    {/* <Exercise exercise={testExercise}/> */}
                 </tbody>
             </table>
         </>

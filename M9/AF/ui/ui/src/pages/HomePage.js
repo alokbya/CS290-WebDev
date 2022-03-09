@@ -45,7 +45,6 @@ function HomePage({setExerciseToEdit}) {
             <ExerciseList exercises={exercises} 
             deleteExercise={deleteExercise}
             onEdit={onEdit} />
-            <Link to="/create-exercise">Add an exercise</Link>
         </>
     );    
 }

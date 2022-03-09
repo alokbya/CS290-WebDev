@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import ExerciseForm from '../components/ExerciseForm';
 
 function CreateExercisePage() {
 
@@ -11,7 +12,7 @@ function CreateExercisePage() {
 
     let history = useHistory();
 
-    const createExercise = async () => {
+    const createExercise = async (exercise) => {
         // fetch post    
         const newExercise = {name, reps, weight, unit, date};
         const response = await fetch('/exercises', {
@@ -21,66 +22,25 @@ function CreateExercisePage() {
                 'Content-Type': 'application/json',
             },
         });
-        if(response.status === 201) {
-            alert('Successfully added the exercise!');
-        } else {
-            alert(`Failed to add movie, status code = ${response.status}`);
-        }
+        // if(response.status === 201) {
+        //     alert('Successfully added the exercise!');
+        // } else {
+        //     alert(`Failed to add movie, status code = ${response.status}`);
+        // }
         history.push('/');
     }
 
     return (
         <>
-            <h1>Create Exercise</h1>
-            <label for="name">Name</label>
-            <input 
-                type="text"
-                placeholder="Enter exercise name"
-                value={name}
-                id="name"
-                onChange={e => setName(e.target.value)} 
-            />
-            <label for="reps">Reps</label>
-            <input
-                type="number"
-                placeholder="Enter exercise set reps"
-                value={reps}
-                id="reps"
-                onChange={e => setReps(e.target.value)}
-            />
-            <label for="weight">Weight</label>
-            <input
-                type="number"
-                placeholder="Enter weight"
-                value={weight}
-                id="weight"
-                onChange={e => setWeight(e.target.value)}
-            />
-            <input
-                type="radio"
-                value="lbs"
-                id="lbs"
-                name="weight" 
-                onChange={e => setUnit(e.target.value)}
-            />
-            <label for="lbs">lbs.</label>
-            <input
-                type="radio"
-                id="kg"
-                name="weight" 
-                value="kg"
-                onChange={e => setUnit(e.target.value)}
-            />
-            <label for="kg">kg</label>
-            <input
-                type="string"
-                id="date"
-                placeholder="Enter exercise date"
-                value={date}
-                onChange={e => setDate(e.target.value)}
-            />
+            <h2>Create Exercise</h2>
+            <ExerciseForm name={name} setName={setName}
+                    reps={reps} setReps={setReps}
+                    weight={weight} setWeight={setWeight}
+                    unit={unit} setUnit={setUnit}
+                    date={date} setDate={setDate}/> 
             <button id="submit-exercise" onClick={createExercise}>Add</button>
         </>
+        
     )
 }
 

@@ -2,5 +2,10 @@
     "cSpell.words": [
         "Alaaddin",
         "Hiefield"
-    ]
+    ],
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#283107",
+        "titleBar.activeBackground": "#38450A",
+        "titleBar.activeForeground": "#F8FCE9"
+    }
 }

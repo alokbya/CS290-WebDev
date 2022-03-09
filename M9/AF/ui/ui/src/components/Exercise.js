@@ -6,9 +6,9 @@ function Exercise ({ exercise, deleteExercise, onEdit }) {
 
     return (
         <tr>
-            <td> { exercise.name } </td>
-            <td> { exercise.reps } </td>
-            <td> { exercise.weight } </td>
+            <td class="name"> { exercise.name } </td>
+            <td class="number"> { exercise.reps } </td>
+            <td class="number"> { exercise.weight } </td>
             <td> { exercise.unit } </td>
             <td> { exercise.date } </td>
             <td onClick={() => onEdit(exercise)}> Edit </td>

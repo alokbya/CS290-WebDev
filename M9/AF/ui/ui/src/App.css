@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -34,5 +34,189 @@
   }
   to {
     transform: rotate(360deg);
+  }
+} */
+
+body {
+  display: grid;
+  height: 100vh;
+  font-size: 20px;
+}
+
+h2 {
+  text-align: center;
+}
+
+header {
+  max-width: 960px;
+  margin: 100px auto;
+  /* padding: 10px; */
+  grid-template-columns: 1fr;
+  justify-content: center;
+  text-align: center;
+  /* grid-template-columns: 1fr 0.2fr 0.1fr */
+}
+
+nav{
+  max-width: 750px;
+  margin: 100px auto;
+  display: flex;
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+main {
+  max-width: 960px;
+  margin: 100px auto;
+  padding: 10px;
+  /* grid-template-columns: 1fr 0.2fr 0.1fr */
+}
+
+footer {
+  max-width: 960px;
+  margin: 100px auto;
+  padding: 10px;
+  text-align: center;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+#exercise-form {
+  display: grid;
+  max-width: 700px;
+  margin: auto;
+  grid-template-columns: 0.5fr 1fr 0.5fr
+}
+
+/* #weight-unit {
+  grid-template-columns: 0.9fr 0.1fr;
+
+} */
+#unit {
+  /* width: 100%; */
+  /* width: 20%;
+  margin-left: 10px;
+  margin-right: 0px; */
+}
+#weight {
+  width: 75%;
+}
+
+
+label {
+  text-align: right;
+  margin-right: 10px;
+  text-decoration: underline;
+}
+
+label, input, select {
+  margin-top:10px;
+}
+
+
+input, select{
+  height: fill;
+  font-size: 20px;
+  border: 1px dotted gray;
+}
+
+select {
+  margin-left:5px;
+  width: 100%;
+  width: 55px;
+}
+
+label {
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+
+
+
+button {
+  width: 33%;
+  display: grid;
+  text-align: center;
+  margin: 20px auto;
+  height: 30px;
+  /* grid-column: 1/3; */
+  font-size: 20px;
+  grid-row: 2;
+}
+
+.number-input {
+  text-align: right;
+}
+
+table {
+  margin: 0px auto;
+  text-align: left;
+}
+
+
+.number {
+  text-align: right;
+}
+
+.name {
+  width: 10vw;
+}
+
+td {
+  width: 5vw;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+tr {
+  background-color: steelblue;
+  color: white;
+}
+
+tr:nth-child(odd) {
+  background-color: lightblue;
+  color: #0d0e18;
+}
+
+th {
+  background-color: white;
+  text-align: center;
+}
+
+.date {
+  width: 11vw;
+}
+
+
+@media (max-width: 500px) {
+  #exercise-form {
+    grid-template-columns: 1fr;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  #weight-unit {
+    display: grid;
+    grid-template-columns: 0.75fr 0.25fr;
+  }
+  #unit {
+    margin-left: 10px;
+    width: fill;
+  }
+  #weight {
+    width: fill;
+  }
+  label {
+    text-align: center;
   }
 }
