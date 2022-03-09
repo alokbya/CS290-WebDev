@@ -17,6 +17,25 @@ One alternative to paying the cloud vendor for the use of MongoDB is to run the 
 
 Another alternative to paying for the use of MongoDB is provided by the three biggest cloud vendors, AWS, Azure and GCP. These vendors have their own document-oriented DBMS and the use of that DBMS is likely to be included in the free trial offer. The vendors provide Node packages similar to Mongoose to connect to their own DBMS product to an app written with Node. A well-written app, with a clean separation between the Model, View and Controller layers, should not require a large code change to switch to a different document-oriented DBMS. The change will mostly be in the Model layer, with some possible changes in the interface between the Controller and the Model. In particular, the View, i.e., the React app, should not be impacted at all due because the React app communicates with the REST API whose specification should not change when the DBMS is changed.
 
+## MongoDB
+[Here](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/) is the documentation to aide in the installation of MongoDB for OSX machines.
+
+1. Tap the [MongoDB Homebrew Tap](https://github.com/mongodb/homebrew-brew) to download the official Homebrew formula for MongoDB and the Database Tools. If you've done this for a previous version of MongoDB, skip this.
+``` Bash
+brew tap mongodb/brew
+```
+2. To install MongoDB, run the following command in your macOS Terminal
+``` Bash
+brew install mongodb-community@5.0
+```
+3. Run MongoDB Community Edition as a macOS service (mongod)
+``` Bash
+brew services start mongodb-community@5.0
+```
+4. Stop mongod service on macOS
+``` Bash
+brew services stop mongodb-community@5.0
+```
 
 ## Valuable Links?
 * The deployment of React apps created using CRA is discussed [here](https://create-react-app.dev/docs/deployment/)

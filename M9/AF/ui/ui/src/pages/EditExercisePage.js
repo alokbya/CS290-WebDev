@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { useHistory } from 'react-router';
 import ExerciseForm
  from '../components/ExerciseForm';
+
 function EditExercisePage({exercise}) {
     
     const [name, setName] = useState(exercise.name);
@@ -13,21 +14,21 @@ function EditExercisePage({exercise}) {
     let history = useHistory();
 
     const editExercise = async () => {
+
         
         const updatedExercise = { name, reps, weight, unit, date };
         const response = await fetch(`/exercises/${exercise._id}`, {
             method: 'PUT',
             body: JSON.stringify(updatedExercise),
             headers: {
-                'Content-Type': 'application/json'
-            }
+                'Content-Type': 'application/json',
+            },
         });
         if (response.status === 200) {
             alert('Successfully edited exercise!');
         } else {
             alert(`Failed to edit exercise, status code = ${response.status}`);
         }
-
         history.push('/');
     }
 
