@@ -37,6 +37,9 @@ brew services start mongodb-community@5.0
 brew services stop mongodb-community@5.0
 ```
 
+## Authentication with Auth0
+[Here is a tutorial](https://auth0.com/blog/node-js-and-express-tutorial-building-and-securing-restful-apis/) using node and express.
+
 ## Valuable Links?
 * The deployment of React apps created using CRA is discussed [here](https://create-react-app.dev/docs/deployment/)
 * Guide to deploying a [Node app on AWS](https://aws.amazon.com/getting-started/hands-on/deploy-nodejs-web-app/) using AWS’s DynamoDB DBMS.
