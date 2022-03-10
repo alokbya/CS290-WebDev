@@ -75,14 +75,11 @@ main {
 }
 
 footer {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 10px;
-  text-align: center;
   position: fixed;
   bottom: 0;
-  width: 100%;
-  font-weight: bold;
+  margin: 0 auto;
+  width: 100vw;
+  text-align: center;
   background-color: rgba(255, 255, 255, 0.95);
 }
 
@@ -93,8 +90,19 @@ footer {
   grid-template-columns: 0.5fr 1fr 0.5fr
 }
 
+#weight-unit {
+  display: grid;
+  grid-template-columns: 0.9fr 0.1fr;
+  gap: 10px;
+  align-items: start;
+
+}
+#unit {
+  width: 175%;
+  justify-self: end;
+}
 #weight {
-  width: 75%;
+  width: 91%;
 }
 
 label {
@@ -117,6 +125,8 @@ select {
   margin-left:5px;
   width: 100%;
   width: 55px;
+  justify-self: end;
+  align-self: end;
 }
 
 label {
@@ -208,14 +218,17 @@ th {
   }
   #weight-unit {
     display: grid;
-    grid-template-columns: 0.75fr 0.25fr;
+    grid-template-columns: 0.9fr 0.1fr;
+    gap: 10px;
+    align-items: start;
+
   }
   #unit {
-    margin-left: 10px;
-    width: fill;
+    width: 130%;
+    justify-self: end;
   }
   #weight {
-    width: fill;
+    width: 96%;
   }
   label {
     text-align: center;
