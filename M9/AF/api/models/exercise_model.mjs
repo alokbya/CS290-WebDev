@@ -1,31 +1,4 @@
-import mongoose from 'mongoose';
-
-// identify db to connect
-mongoose.connect(
-    'mongodb://localhost:27017/exercises_db',
-    { useNewUrlParser: true }
-);
-
-// connect to db
-const db = mongoose.connection;
-
-db.once('open', () => {
-    console.log('Successfully connected to MongoDB using Mongoose!');
-});
-
-// define schema
-const exerciseSchema = new mongoose.Schema({
-    name : {type: String, required: true},
-    reps: {type: Number, required: true},
-    weight: {type: Number, required: true},
-    unit: {type: String, required: true},
-    date: {type: String, required: true}
-});
-
-// compile, generate model
-const Exercise = mongoose.model("Exercise", exerciseSchema);
-
-// methods
+import { Exercise } from "../data/app.data.mjs";
 
 /*
     * Add
