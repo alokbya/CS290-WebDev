@@ -8,10 +8,12 @@ import CreateExercisePage from './pages/CreateExercisePage'
 import EditExercisePage from './pages/EditExercisePage';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   const history = useHistory();  
   const [exerciseToEdit, setExerciseToEdit] = useState();
+  const [ loggedIn, setLoggedIn ] = useState(false);
 
   return (
     <div className="App">
@@ -23,7 +25,10 @@ function App() {
         <Navigation />
         <main>
           <Route path="/" exact>
-            <HomePage setExerciseToEdit={setExerciseToEdit}/>
+            <HomePage setExerciseToEdit={setExerciseToEdit} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+          </Route>
+          <Route path="/login">
+            <LoginPage loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
           </Route>
           <Route path="/create-exercise">
             <CreateExercisePage />

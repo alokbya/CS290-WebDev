@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 
-function HomePage({setExerciseToEdit}) {
+function HomePage({setExerciseToEdit, loggedIn}) {
     // initially sets exercises to UNDEFINED if default value is not used
     // this throws an exception when trying to map over exercises obj in ExerciseList
     const [exercises, setExercises] = useState([]);
@@ -37,7 +37,12 @@ function HomePage({setExerciseToEdit}) {
     }
 
     useEffect(() => {
-        getExercises();
+        if (!loggedIn) {
+            history.push('/login');
+        }
+        else {
+            getExercises();    
+        }
     }, []);
 
     return (

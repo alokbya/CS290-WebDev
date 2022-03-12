@@ -3,8 +3,8 @@ import { Exercise } from "../data/app.data.mjs";
 /*
     * Add
 */
-const addExercise = async (name, reps, weight, unit, date) => {
-    const exercise = new Exercise({name, reps, weight, unit, date});
+const addExercise = async (name, reps, weight, unit, date, user) => {
+    const exercise = new Exercise({name, reps, weight, unit, date, user});
     return exercise.save();
 }
 

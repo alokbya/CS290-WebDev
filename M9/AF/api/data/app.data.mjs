@@ -36,6 +36,12 @@ const userSchema = new mongoose.Schema({
     token: {type: String}
 });
 
+const blacklistSchema = new mongoose.Schema({
+    token: {type: String, required: true}
+});
+
+const BlackList = mongoose.model("BlackList", blacklistSchema);
+
 const User = mongoose.model("User", userSchema);
 
 // compile, generate model
@@ -43,4 +49,4 @@ const User = mongoose.model("User", userSchema);
 const Exercise = mongoose.model("Exercise", exerciseSchema);
 // methods
 
-export { Exercise, User }
+export { Exercise, User, BlackList }

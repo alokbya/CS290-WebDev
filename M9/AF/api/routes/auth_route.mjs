@@ -1,17 +1,16 @@
 import { application } from 'express';
 import * as users from '../models/user_model.mjs';
+import * as blackList from '../models/blacklist_model.mjs';
 import express from 'express';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
+import { destroyToken } from '../auth/auth.mjs';
+
 dotenv.config();
 
 const router = express.Router();
-
-router.post('/login', (req, res) => {
-    // login logic
-    res.status(200).send("hit login endpoint");
-});
 
 /*
     * Register user
@@ -52,11 +51,10 @@ router.post('/register', async (req, res) => {
             },
         );
 
-        // Save user token
-        // users.updateUser({ email }, {token: token});
         user.token = token;
 
-        res.status(201).json(user);
+        // Set token cookie (JWT)
+        res.cookie('token', token).status(201).json(user);
 
     } catch (error) {
         console.error(error);
@@ -83,11 +81,11 @@ router.post('/login', async (req, res) => {
 
         // Validate user exists
         const user = await users.getUser({ email });
-
-        if (user && (await bcrypt.compare(password, user.password))) {
+        const pUser = JSON.parse(JSON.stringify(user))[0];
+        if (user && (await bcrypt.compare(password, pUser.password))) {
             // Create token
             const token = jwt.sign(
-                { user_id: user._id, email },
+                { user_id: pUser._id, email },
                 process.env.TOKEN_KEY,
                 {
                     expiresIn: '2h',
@@ -97,8 +95,8 @@ router.post('/login', async (req, res) => {
             // Save user token
             user.token = token;
 
-            // Return user
-            res.status(200).json(user);
+            // Set token cookie (JWT)
+            res.cookie('token', token).status(200).json(user);
         }
         res.status(400).json({Error: 'Invalid username or password'});
     } catch(error) {
@@ -107,6 +105,22 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.delete('/logout', (req, res) => {
+    destroyToken(req.cookies.token);
+    const filter = { token: req.cookies.token};
+    blackList.getToken(filter)
+        .then(token => {
+            if (token.length > 0) {
+                res.clearCookie('token');
+                res.status(200).json({Status: 'JWT token blacklisted'});
+            } else {
+                throw new Error();
+            }
+        })
+        .catch(error => {
+            res.status(500).json({Status: 'Unable to blacklist token'});
+        });
+});
 /*********************************************
     * HELPER FUNCTIONS FOR DEVELOPMENT ONLY
 *********************************************/
