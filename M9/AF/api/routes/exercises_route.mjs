@@ -1,4 +1,5 @@
-import express from 'express';
+import express, { application } from 'express';
+import jwt from 'jsonwebtoken';
 import { verifyToken } from '../auth/auth.mjs';
 import * as exercises from '../models/exercise_model.mjs';
 const router = express.Router();
@@ -11,10 +12,12 @@ const router = express.Router();
     * Token validation middleware
     * Validate that the user requesting an operation is authenticated
 */
-router.use('/', (req, res, next) => {
-    verifyToken(req, res, next);
-    next();
-});
+// router.use('/', (req, res, next) => {
+//     req = verifyToken(req, res, next);
+//     next();
+// });
+
+router.use(verifyToken)
 
 /******************
     * Endpoints
@@ -53,7 +56,6 @@ router.post("/", async (req, res) => {
     * This endpoint will use a cookie (token) to determine which user is associated with this exercise.
 */
 router.get("/", async (req, res) => {
-    const token = '622b87ae103eb95a44b637cb';
     const filter = {};
     filter.user = req.user.user_id;
     await exercises.getExercise(filter, '', 0)

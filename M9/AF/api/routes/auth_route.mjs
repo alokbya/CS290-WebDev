@@ -105,8 +105,14 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.delete('/logout', (req, res) => {
-    destroyToken(req.cookies.token);
+/*
+    * Logout user
+    * Middleware (destroyToken) will add users JWT (req.cookies.token) to black list
+    * The JWT will be fetched from the blacklist
+    * If JWT is found, the token cookie is cleared, and HTTP 200 is returned to client
+    * If JWT is not found HTTP 404 (Not Found) is returned to client
+*/
+router.delete('/logout', destroyToken, (req, res) => {
     const filter = { token: req.cookies.token};
     blackList.getToken(filter)
         .then(token => {
@@ -114,13 +120,14 @@ router.delete('/logout', (req, res) => {
                 res.clearCookie('token');
                 res.status(200).json({Status: 'JWT token blacklisted'});
             } else {
-                throw new Error();
+                res.status(404).json({Status: 'JWT not found in blacklist'});
             }
         })
         .catch(error => {
             res.status(500).json({Status: 'Unable to blacklist token'});
         });
 });
+
 /*********************************************
     * HELPER FUNCTIONS FOR DEVELOPMENT ONLY
 *********************************************/
