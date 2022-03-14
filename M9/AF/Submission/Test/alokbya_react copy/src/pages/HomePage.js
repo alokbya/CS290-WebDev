@@ -5,16 +5,17 @@ import {Link} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 
-function HomePage({setExerciseToEdit, loggedIn}) {
+function HomePage({setExerciseToEdit}) {
+    // initially sets exercises to UNDEFINED if default value is not used
+    // this throws an exception when trying to map over exercises obj in ExerciseList
     const [exercises, setExercises] = useState([]);
-    const [ isLoading, setIsLoading ] = useState(false);
+
     const history = useHistory();
 
     const getExercises = async () => {
         const response = await fetch('/exercises');
         const exercises = await response.json();
         setExercises(exercises);
-        setIsLoading(false);
     }
 
     const deleteExercise = async (id) => {
@@ -31,44 +32,21 @@ function HomePage({setExerciseToEdit, loggedIn}) {
     }
 
     const onEdit = (exercise) => {
-        setIsLoading(true);
         setExerciseToEdit(exercise)
         history.push('/edit-exercise');
     }
 
     useEffect(() => {
-        if (!loggedIn) {
-            history.push('/login');
-        }
-        else {
-            setIsLoading(true);
-            getExercises();
-        }
+        getExercises();
     }, []);
 
-    if (isLoading) {
-        return (
-            <p className="loading">Loading...</p>
-        )
-    }
-    else if (!isLoading && exercises.length === 0) {
-        return (
-            <>
-                <section>
-                    <p id="no-exercises">It looks like you haven't added any exercises yet. <Link to="/create-exercise">Create new exercises</Link> to see them here.</p>
-                </section>
-            </>
-        );
-    } else {
-        return (
-            <>
-                <ExerciseList exercises={exercises} 
-                deleteExercise={deleteExercise}
-                onEdit={onEdit} />
-            </>
-        );
-    }
-        
+    return (
+        <>
+            <ExerciseList exercises={exercises} 
+            deleteExercise={deleteExercise}
+            onEdit={onEdit} />
+        </>
+    );    
 }
 
 export default HomePage;
