@@ -1,24 +1,26 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 
 function LogoutButton({loggedIn, setLoggedIn}) {
     
-    const logoutUser = () => {
+    const history = useHistory();
+
+    const logoutUser = async () => {
         const response = await fetch('/auth/logout', {
             method: 'DELETE',
-            body: JSON.stringify({email, password}),
             headers: {
                 'Content-Type': 'application/json',
             },
         });
         if (response.status === 200) {
             setLoggedIn(false);
-            history.push('/');
+            history.push('/login');
         }
     }
 
     return (
         <>
-            <button id="logout-button">Logout</button>
+            <button className="logout-button" onClick={logoutUser}>Logout</button>
         </>
     );
 }
