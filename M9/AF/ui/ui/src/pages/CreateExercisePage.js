@@ -22,9 +22,9 @@ function CreateExercisePage() {
             },
         });
         if(response.status === 201) {
-            alert('Successfully added the exercise!');
+            console.log('Successfully added the exercise!');
         } else {
-            alert(`Failed to add movie, status code = ${response.status}`);
+            console.log(`Failed to add movie, status code = ${response.status}`);
         }
         history.push('/');
     }

@@ -35,9 +35,9 @@ function ExerciseForm({name, setName,
                         class="number-input"
                         onChange={e => setWeight(e.target.value)}
                     />
-                    <select name="unit" id="unit" onClick={e => setUnit(e.target.text)} onChange={e => setUnit(e.target.text)}>
-                        <option value={unit}>lbs</option>
-                        <option value={unit}>kg</option>
+                    <select name="unit" id="unit" value={unit} onChange={e => setUnit(e.target.value)}>
+                        <option>lbs</option>
+                        <option>kg</option>
                     </select>
                 </section>
                 

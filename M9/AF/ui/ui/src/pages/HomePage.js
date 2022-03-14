@@ -9,13 +9,14 @@ function HomePage({setExerciseToEdit, loggedIn}) {
     // initially sets exercises to UNDEFINED if default value is not used
     // this throws an exception when trying to map over exercises obj in ExerciseList
     const [exercises, setExercises] = useState([]);
-
+    const [ isLoading, setIsLoading ] = useState(false);
     const history = useHistory();
 
     const getExercises = async () => {
         const response = await fetch('/exercises');
         const exercises = await response.json();
         setExercises(exercises);
+        setIsLoading(false);
     }
 
     const deleteExercise = async (id) => {
@@ -32,6 +33,7 @@ function HomePage({setExerciseToEdit, loggedIn}) {
     }
 
     const onEdit = (exercise) => {
+        setIsLoading(true);
         setExerciseToEdit(exercise)
         history.push('/edit-exercise');
     }
@@ -45,7 +47,12 @@ function HomePage({setExerciseToEdit, loggedIn}) {
         }
     }, []);
 
-    if (exercises.length === 0) {
+    if (isLoading) {
+        return (
+            <p className="loading">Loading...</p>
+        )
+    }
+    else if (!isLoading && exercises.length === 0) {
         return (
             <>
                 <section>

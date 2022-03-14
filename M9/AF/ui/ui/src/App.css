@@ -177,8 +177,7 @@ a:hover {
   margin: 10px auto;
   max-width: 750px;
   text-align: center;
-  background-color: coral;
-  height: 5vh;
+  height: 2vh;
   justify-content: center;
   align-content: center;
 }
