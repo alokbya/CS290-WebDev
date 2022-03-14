@@ -166,6 +166,23 @@ a:hover {
   grid-row-start: 6;
 }
 
+.invalid-auth-text {
+  margin: auto;
+  max-width: 750px;
+  text-align: center;
+  color: red;
+}
+
+.sign-in-transition {
+  margin: 10px auto;
+  max-width: 750px;
+  text-align: center;
+  background-color: coral;
+  height: 5vh;
+  justify-content: center;
+  align-content: center;
+}
+
 .link {
   text-align: center;
   background-color: white;
@@ -326,6 +343,11 @@ th {
 
 .date {
   width: 11vw;
+}
+
+#no-exercises {
+  margin: 10px auto;
+  max-width: 750px;
 }
 
 @media (max-width: 500px) {

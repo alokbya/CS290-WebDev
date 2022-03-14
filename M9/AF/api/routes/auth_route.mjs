@@ -81,6 +81,9 @@ router.post('/login', async (req, res) => {
 
         // Validate user exists
         const user = await users.getUser({ email });
+        if (user.length === 0) {
+            res.status(400).json({Error: 'Invalid username or password'});
+        }
         const pUser = JSON.parse(JSON.stringify(user))[0];
         if (user && (await bcrypt.compare(password, pUser.password))) {
             // Create token

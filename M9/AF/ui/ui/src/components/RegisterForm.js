@@ -7,7 +7,8 @@ function RegisterPage({loggedIn, setLoggedIn,
     firstName, setFirstName, 
     lastName, setLastName,
     loginUser, setLoginUser,
-    registerUser, setRegisterUser}) {
+    registerUser, setRegisterUser,
+    authenticating, setAuthenticating}) {
     
     const history = useHistory();
 
@@ -16,6 +17,7 @@ function RegisterPage({loggedIn, setLoggedIn,
 
 
     const createAndAuthenticateUser = async () => {
+        setAuthenticating(true);
         const user = { first_name: firstName,
             last_name: lastName,
             email: email,
@@ -27,20 +29,17 @@ function RegisterPage({loggedIn, setLoggedIn,
             headers: {
                 'Content-Type': 'application/json'
             },
-        })
-        .then(response => {
-            if (response.status === 201) {
-                setLoggedIn(true);
-                setInvalidLogin(false);
-                history.push('/');
-            } else if (response.status === 400) {
-                setInvalidLogin(true);
-            }
-        })
-        .catch(error => {
-            console.error(error);
         });
-        
+
+        if (response.status === 201) {
+            setLoggedIn(true);
+            setInvalidLogin(false);
+            setAuthenticating(false);
+            history.push('/');
+        } else if (response.status === 400) {
+            setInvalidLogin(true);
+            setAuthenticating(false);
+        }        
     }
 
     const loginRedirect = () => {

@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
-function LoginForm({loggedIn, setLoggedIn, email, setEmail, password, setPassword, loginUser, setLoginUser, registerUser, setRegisterUser}) {
+function LoginForm({loggedIn, setLoggedIn, email, setEmail, password, setPassword, loginUser, setLoginUser, registerUser, setRegisterUser, authenticating, setAuthenticating}) {
 
     // Cookie information
     const [ cookies, setCookie ] = useCookies(['token']);
-
+    const [ invalidLogin, setInvalidLogin ] = useState(false)
     const history = useHistory();
 
     const authenticateUser = async () => {
@@ -20,7 +20,11 @@ function LoginForm({loggedIn, setLoggedIn, email, setEmail, password, setPasswor
         .then(response => {
             if (response.status === 200) {
                 setLoggedIn(true);
+                setInvalidLogin(false);
                 history.push('/');
+            } else if (response.status === 400) {
+                setInvalidLogin(true);
+                setPassword('');
             }
         })
         .catch(error => {
@@ -35,6 +39,8 @@ function LoginForm({loggedIn, setLoggedIn, email, setEmail, password, setPasswor
         setRegisterUser(true);
     }
 
+    const invalidLoginJSX = <p class="invalid-auth-text">Invalid email or password.</p>
+
     return (
         <>
             <div id="auth-form">
@@ -42,6 +48,7 @@ function LoginForm({loggedIn, setLoggedIn, email, setEmail, password, setPasswor
                 <input
                     className="auth-input"
                     type="text"
+                    value={email}
                     placeholder="Email address"
                     onChange={e => setEmail(e.target.value)}
                     required
@@ -49,6 +56,7 @@ function LoginForm({loggedIn, setLoggedIn, email, setEmail, password, setPasswor
                 <input
                     className="auth-input"
                     type="password"
+                    value={password}
                     placeholder="Password"
                     onChange={e => setPassword(e.target.value)}
                     required
@@ -56,6 +64,7 @@ function LoginForm({loggedIn, setLoggedIn, email, setEmail, password, setPasswor
                 <button id="login-btn" className="auth-btn" onClick={authenticateUser}>Login</button>
                 <p className="redirect" id="register-redirect">Don't have an account? <a className="auth-link" onClick={registrationRedirect}>Sign up here!</a></p>
             </div>
+            {invalidLogin ? invalidLoginJSX : <></>}
         </>
     );
 }

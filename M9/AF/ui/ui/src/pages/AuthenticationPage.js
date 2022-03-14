@@ -12,8 +12,17 @@ function AuthenticationPage({loggedIn, setLoggedIn}) {
     const [ lastName, setLastName ] = useState();
     const [ loginUser, setLoginUser ] = useState(true);
     const [ registerUser, setRegisterUser ] = useState(false);
+    const [ authenticating, setAuthenticating ] = useState(false);
 
-    if (loginUser && !registerUser) {
+    if (loggedIn) {
+        history.push('/');
+    } if (authenticating) {
+        return (
+            <>
+                <p className="sign-in-transition">Signing in...</p>
+            </>
+        )
+    } else if (loginUser && !registerUser) {
         return (
             <>
                 <LoginForm loggedIn={loggedIn} setLoggedIn={setLoggedIn}
@@ -21,10 +30,11 @@ function AuthenticationPage({loggedIn, setLoggedIn}) {
                     password={password} setPassword={setPassword}
                     loginUser={loginUser} setLoginUser={setLoginUser}
                     registerUser={registerUser} setRegisterUser={setRegisterUser}
+                    authenticating={authenticating} setAuthenticating={setAuthenticating}
                 />
             </>
         )
-    } else {
+    } else if (!loginUser && registerUser) {
         return (
             <>
                 <RegisterForm loggedIn={loggedIn} setLoggedIn={setLoggedIn}
@@ -34,6 +44,7 @@ function AuthenticationPage({loggedIn, setLoggedIn}) {
                     lastName={lastName} setLastName={setLastName}
                     loginUser={loginUser} setLoginUser={setLoginUser}
                     registerUser={registerUser} setRegisterUser={setRegisterUser}
+                    authenticating={authenticating} setAuthenticating={setAuthenticating}
                     />
             </>
         )

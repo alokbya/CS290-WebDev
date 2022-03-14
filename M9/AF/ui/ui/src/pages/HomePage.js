@@ -41,17 +41,28 @@ function HomePage({setExerciseToEdit, loggedIn}) {
             history.push('/login');
         }
         else {
-            getExercises();    
+            getExercises();
         }
     }, []);
 
-    return (
-        <>
-            <ExerciseList exercises={exercises} 
-            deleteExercise={deleteExercise}
-            onEdit={onEdit} />
-        </>
-    );    
+    if (exercises.length === 0) {
+        return (
+            <>
+                <section>
+                    <p id="no-exercises">It looks like you haven't added any exercises yet. <Link to="/create-exercise">Create new exercises</Link> to see them here.</p>
+                </section>
+            </>
+        );
+    } else {
+        return (
+            <>
+                <ExerciseList exercises={exercises} 
+                deleteExercise={deleteExercise}
+                onEdit={onEdit} />
+            </>
+        );
+    }
+        
 }
 
 export default HomePage;
