@@ -1,0 +1,236 @@
+body {
+  display: grid;
+  font-size: 20px;
+  overflow: visible;
+  height: 100vh;
+}
+
+h2 {
+  text-align: center;
+}
+
+header {
+  max-width: 960px;
+  margin: 100px auto;
+  /* padding: 10px; */
+  grid-template-columns: 1fr;
+  justify-content: center;
+  text-align: center;
+  /* grid-template-columns: 1fr 0.2fr 0.1fr */
+}
+
+#description {
+  font-style: italic;
+  color: gray;
+  margin: 0 auto;
+}
+
+nav{
+  max-width: 750px;
+  margin: 100px auto;
+  display: flex;
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a {
+  padding-left: 10px;
+  padding-right: 10px;
+  color: black;
+  text-decoration: none;
+  border-radius: 10px;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  background: lightblue;
+}
+
+.link {
+  text-align: center;
+  background-color: white;
+  color: black;
+}
+.link:hover {
+  cursor: pointer;
+  color: coral;
+}
+
+.edit-link {
+  text-align: right;
+}
+.delete-link {
+  text-align: left;
+}
+
+main {
+  max-width: 960px;
+  margin: 100px auto;
+  padding: 10px;
+  height: 100%;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  margin: 0 auto;
+  width: 100vw;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+#exercise-form {
+  display: grid;
+  max-width: 700px;
+  margin: auto;
+  grid-template-columns: 0.5fr 1fr 0.5fr
+}
+
+#weight-unit {
+  display: grid;
+  grid-template-columns: 0.9fr 0.1fr;
+  gap: 10px;
+  align-items: start;
+
+}
+#unit {
+  width: 175%;
+  justify-self: end;
+}
+#weight {
+  width: 91%;
+}
+
+label {
+  text-align: right;
+  margin-right: 10px;
+  text-decoration: underline;
+}
+
+label, input, select {
+  margin-top:10px;
+}
+
+input, select{
+  height: fill;
+  font-size: 20px;
+  border: 1px dotted gray;
+}
+
+select {
+  margin-left:5px;
+  width: 100%;
+  width: 55px;
+  justify-self: end;
+  align-self: end;
+}
+
+label {
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+
+button {
+  width: 33%;
+  display: grid;
+  text-align: center;
+  margin: 20px auto;
+  height: 30px;
+  background-color: steelblue;
+  border-radius: 10px;
+  color: white;
+  font-size: 20px;
+  grid-row: 2;
+}
+
+button:hover {
+  background-color: skyblue;
+  
+}
+
+button:active, a:active {
+  background-color: coral;
+  color: white;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+.number-input {
+  text-align: right;
+}
+
+table {
+  margin: 0px auto;
+  text-align: left;
+}
+
+.number {
+  text-align: right;
+}
+
+.name {
+  width: 10vw;
+}
+
+td {
+  width: 5vw;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+tr {
+  background-color: steelblue;
+  color: white;
+}
+
+tr:nth-child(odd) {
+  background-color: lightblue;
+  color: #0d0e18;
+}
+
+th {
+  background-color: coral;
+  color: white;
+  text-align: center;
+}
+
+#edit-header, #delete-header {
+  background-color: white;
+}
+
+.date {
+  width: 11vw;
+}
+
+@media (max-width: 500px) {
+  #exercise-form {
+    grid-template-columns: 1fr;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  #weight-unit {
+    display: grid;
+    grid-template-columns: 0.9fr 0.1fr;
+    gap: 10px;
+    align-items: start;
+
+  }
+  #unit {
+    width: 130%;
+    justify-self: end;
+  }
+  #weight {
+    width: 96%;
+  }
+  label {
+    text-align: center;
+  }
+}
